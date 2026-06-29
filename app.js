@@ -21,7 +21,8 @@ const elements = {
   feedback: document.querySelector("#feedback"),
   prevButton: document.querySelector("#prevButton"),
   nextButton: document.querySelector("#nextButton"),
-  resetButton: document.querySelector("#resetButton")
+  resetButton: document.querySelector("#resetButton"),
+  resourceLink: document.querySelector("#resourceLink")
 };
 
 function saveAnswers() {
@@ -136,6 +137,10 @@ function render() {
   state.activeTopicId = topic.id;
   elements.sourcePath.textContent = topic.source;
   elements.topicTitle.textContent = topic.title;
+  if (elements.resourceLink) {
+    elements.resourceLink.href = topic.source;
+    elements.resourceLink.textContent = topic.source.endsWith(".json") ? "完整题库" : "来源文件";
+  }
   renderTopicList();
   renderSummary(topic);
   renderScore(topic);
