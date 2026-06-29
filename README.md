@@ -1,4 +1,4 @@
-﻿# AgenticRL Quiz App
+﻿# study-card-lab
 
 This folder contains a static quiz app for the notes in this repository.
 
