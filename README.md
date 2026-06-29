@@ -8,6 +8,8 @@ This folder contains a static quiz app for the notes in this repository.
 - `styles.css`: responsive layout
 - `app.js`: quiz interaction and local progress storage
 - `data/quiz-data.js`: knowledge summaries and multiple-choice questions
+- `question-banks/`: full JSON question banks
+- `data/agent-runtime-protocol-topic.js`: adapter that loads the Agent Runtime JSON bank into the app
 
 ## Mobile Access
 
@@ -28,4 +30,6 @@ py -m http.server 8000
 Then open `http://your-computer-lan-ip:8000` on the phone.
 
 Progress is stored in the browser's `localStorage`, so it stays on the same device and browser.
+
+
 

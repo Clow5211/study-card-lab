@@ -1,0 +1,4206 @@
+{
+  "title": "Agent Runtime 与协议体系选择题题库",
+  "count": 150,
+  "items": [
+    {
+      "id": 1,
+      "section": "第1章 总体框架",
+      "type": "single_choice",
+      "question": "Agent 工程化最核心解决的问题是什么？",
+      "options": [
+        {
+          "key": "A",
+          "text": "让模型参数更多、推理更长"
+        },
+        {
+          "key": "B",
+          "text": "把模型的不确定性推理转化为可控、可审计的系统动作"
+        },
+        {
+          "key": "C",
+          "text": "完全取消传统后端服务"
+        },
+        {
+          "key": "D",
+          "text": "让所有业务逻辑都写进 Prompt"
+        }
+      ],
+      "answer": "B",
+      "explanation_correct": "Agent Runtime 的核心价值是把模型的意图、安全治理、状态管理和工具执行连接起来。",
+      "explanation_wrong": "A只强调模型能力；C不现实；D会导致流程不可控，Prompt 不能替代工程治理。",
+      "extension": "面试中可以把 Agent 平台理解为“模型控制面 + 受控执行面”的组合。"
+    },
+    {
+      "id": 2,
+      "section": "第1章 总体框架",
+      "type": "single_choice",
+      "question": "为什么不能让大模型直接控制外部系统？",
+      "options": [
+        {
+          "key": "A",
+          "text": "因为模型不能输出文本"
+        },
+        {
+          "key": "B",
+          "text": "因为模型输出具有不确定性，缺少权限、幂等、审计等工程约束"
+        },
+        {
+          "key": "C",
+          "text": "因为外部系统只能由人操作"
+        },
+        {
+          "key": "D",
+          "text": "因为工具调用一定比自然语言慢"
+        }
+      ],
+      "answer": "B",
+      "explanation_correct": "真实业务系统需要确定性和可追踪性，模型只能表达意图，不能绕过治理直接执行。",
+      "explanation_wrong": "A错误，模型当然能输出文本；C过于绝对；D不是关键原因。",
+      "extension": "高风险场景中，执行权必须留在 Runtime 或业务系统侧。"
+    },
+    {
+      "id": 3,
+      "section": "第1章 总体框架",
+      "type": "single_choice",
+      "question": "Agent Runtime 在整体架构中主要属于哪一层？",
+      "options": [
+        {
+          "key": "A",
+          "text": "只属于模型训练层"
+        },
+        {
+          "key": "B",
+          "text": "只属于前端 UI 层"
+        },
+        {
+          "key": "C",
+          "text": "运行时层，负责状态推进、工具循环、权限校验和任务调度"
+        },
+        {
+          "key": "D",
+          "text": "只属于数据库存储层"
+        }
+      ],
+      "answer": "C",
+      "explanation_correct": "Runtime 是 Agent 系统执行的中枢，连接模型、工具、状态和治理。",
+      "explanation_wrong": "A/B/D都把 Runtime 缩小成单一模块，无法覆盖真实职责。",
+      "extension": "Runtime 不等于工作流引擎，它还要处理模型不确定性和工具治理。"
+    },
+    {
+      "id": 4,
+      "section": "第1章 总体框架",
+      "type": "single_choice",
+      "question": "协议层在 Agent 工程体系中的作用是什么？",
+      "options": [
+        {
+          "key": "A",
+          "text": "定义模型、工具、资源、Agent 之间的交互方式"
+        },
+        {
+          "key": "B",
+          "text": "替代所有业务数据库"
+        },
+        {
+          "key": "C",
+          "text": "负责显卡显存管理"
+        },
+        {
+          "key": "D",
+          "text": "决定模型预训练语料"
+        }
+      ],
+      "answer": "A",
+      "explanation_correct": "Function Calling、MCP、A2A 都属于协议或交互规范，用来统一系统边界。",
+      "explanation_wrong": "B/C/D分别属于存储、硬件和训练范畴，不是协议层职责。",
+      "extension": "协议层越清晰，大规模能力接入和协作越容易治理。"
+    },
+    {
+      "id": 5,
+      "section": "第1章 总体框架",
+      "type": "single_choice",
+      "question": "治理层通常不包括哪项能力？",
+      "options": [
+        {
+          "key": "A",
+          "text": "权限控制"
+        },
+        {
+          "key": "B",
+          "text": "审计追踪"
+        },
+        {
+          "key": "C",
+          "text": "灰度发布"
+        },
+        {
+          "key": "D",
+          "text": "矩阵乘法加速"
+        }
+      ],
+      "answer": "D",
+      "explanation_correct": "矩阵乘法加速属于底层推理或硬件优化，不是 Agent 治理层重点。",
+      "explanation_wrong": "A/B/C都是治理层常见能力，分别对应安全、追溯和版本发布。",
+      "extension": "治理层关注的是谁能做什么、怎么做、出了问题能否追溯。"
+    },
+    {
+      "id": 6,
+      "section": "第1章 总体框架",
+      "type": "single_choice",
+      "question": "Agent 平台中的资产层主要沉淀什么？",
+      "options": [
+        {
+          "key": "A",
+          "text": "工具、Skill、Prompt、Workflow、Artifact 等可复用能力"
+        },
+        {
+          "key": "B",
+          "text": "GPU 驱动"
+        },
+        {
+          "key": "C",
+          "text": "操作系统内核"
+        },
+        {
+          "key": "D",
+          "text": "用户浏览器缓存"
+        }
+      ],
+      "answer": "A",
+      "explanation_correct": "资产层把经验、能力和产物沉淀为可复用、可版本化的对象。",
+      "explanation_wrong": "B/C/D都不是 Agent 能力资产的核心对象。",
+      "extension": "平台化的关键是把一次性经验变成可评测、可复用资产。"
+    },
+    {
+      "id": 7,
+      "section": "第1章 总体框架",
+      "type": "single_choice",
+      "question": "“模型是控制面的一部分”这句话更准确的理解是？",
+      "options": [
+        {
+          "key": "A",
+          "text": "模型负责真实执行数据库写入"
+        },
+        {
+          "key": "B",
+          "text": "模型表达决策和动作意图，执行由系统侧接管"
+        },
+        {
+          "key": "C",
+          "text": "模型必须管理所有权限"
+        },
+        {
+          "key": "D",
+          "text": "模型直接保存所有状态"
+        }
+      ],
+      "answer": "B",
+      "explanation_correct": "模型可以规划和选择工具，但真实执行、权限、审计必须由 Runtime 负责。",
+      "explanation_wrong": "A/C/D都会把不可控能力交给模型，风险过高。",
+      "extension": "这个表达常用于区分 LLM 的推理能力和后端系统的执行能力。"
+    },
+    {
+      "id": 8,
+      "section": "第1章 总体框架",
+      "type": "single_choice",
+      "question": "Agent 工程化为什么强调“可回放”？",
+      "options": [
+        {
+          "key": "A",
+          "text": "为了让用户看动画"
+        },
+        {
+          "key": "B",
+          "text": "为了复现线上失败，定位是模型、工具、权限、状态还是流程问题"
+        },
+        {
+          "key": "C",
+          "text": "为了减少所有日志"
+        },
+        {
+          "key": "D",
+          "text": "为了替代权限校验"
+        }
+      ],
+      "answer": "B",
+      "explanation_correct": "可回放能把一次 Agent 执行链路复现出来，是排障和评测的基础。",
+      "explanation_wrong": "A无关；C相反，回放需要关键日志；D错误，回放不能替代权限。",
+      "extension": "没有 Trace 和回放，复杂 Agent 的失败很难定位根因。"
+    },
+    {
+      "id": 9,
+      "section": "第1章 总体框架",
+      "type": "single_choice",
+      "question": "下面哪种说法最符合生产级 Agent 的设计思想？",
+      "options": [
+        {
+          "key": "A",
+          "text": "模型能想到什么就执行什么"
+        },
+        {
+          "key": "B",
+          "text": "工具越多越好，全量暴露给模型"
+        },
+        {
+          "key": "C",
+          "text": "用协议、Schema、Workflow 和 Runtime 约束模型行为"
+        },
+        {
+          "key": "D",
+          "text": "只要 Prompt 写得长，就不需要后端治理"
+        }
+      ],
+      "answer": "C",
+      "explanation_correct": "生产级 Agent 依靠工程约束来获得可靠性，而不是只靠模型自觉。",
+      "explanation_wrong": "A/D会失控；B会增加选择噪声和安全风险。",
+      "extension": "Prompt 是必要手段，但不是治理体系的替代品。"
+    },
+    {
+      "id": 10,
+      "section": "第1章 总体框架",
+      "type": "single_choice",
+      "question": "Agent 平台从“Demo”走向“生产”的关键变化是什么？",
+      "options": [
+        {
+          "key": "A",
+          "text": "只换更大的模型"
+        },
+        {
+          "key": "B",
+          "text": "只增加 UI 动画"
+        },
+        {
+          "key": "C",
+          "text": "补齐权限、状态、幂等、审计、恢复和评测"
+        },
+        {
+          "key": "D",
+          "text": "取消所有工具"
+        }
+      ],
+      "answer": "C",
+      "explanation_correct": "Demo 可以只展示能跑，生产系统必须承担安全、可靠性和可维护性。",
+      "explanation_wrong": "A可能提升能力但不解决治理；B无关；D会失去执行能力。",
+      "extension": "生产可用性的核心是系统工程，而不是单点模型能力。"
+    },
+    {
+      "id": 11,
+      "section": "第2章 Function Calling",
+      "type": "single_choice",
+      "question": "Function Calling 的直接输出通常是什么？",
+      "options": [
+        {
+          "key": "A",
+          "text": "自然语言长答案"
+        },
+        {
+          "key": "B",
+          "text": "工具名和符合 Schema 的参数"
+        },
+        {
+          "key": "C",
+          "text": "数据库连接对象"
+        },
+        {
+          "key": "D",
+          "text": "已经执行完的真实业务结果"
+        }
+      ],
+      "answer": "B",
+      "explanation_correct": "Function Calling 让模型输出结构化动作请求，而不是亲自执行。",
+      "explanation_wrong": "A是普通回答；C/D属于系统侧或工具执行结果。",
+      "extension": "模型只表达调用意图，执行发生在 Runtime 或工具执行器。"
+    },
+    {
+      "id": 12,
+      "section": "第2章 Function Calling",
+      "type": "single_choice",
+      "question": "普通 Prompt 输出 JSON 与 Function Calling 的核心区别是什么？",
+      "options": [
+        {
+          "key": "A",
+          "text": "前者是动作契约，后者只是格式"
+        },
+        {
+          "key": "B",
+          "text": "前者不能包含字段"
+        },
+        {
+          "key": "C",
+          "text": "Function Calling 是动作契约，普通 JSON 主要是格式约束"
+        },
+        {
+          "key": "D",
+          "text": "两者完全没有区别"
+        }
+      ],
+      "answer": "C",
+      "explanation_correct": "Function Calling 绑定工具名和参数 Schema，更适合驱动外部动作。",
+      "explanation_wrong": "A颠倒了；B错误；D忽略了动作语义和校验机制。",
+      "extension": "JSON 像“写成表格”，Function Calling 像“填写标准工单”。"
+    },
+    {
+      "id": 13,
+      "section": "第2章 Function Calling",
+      "type": "single_choice",
+      "question": "Structured Outputs 更适合哪类任务？",
+      "options": [
+        {
+          "key": "A",
+          "text": "创建退款工单"
+        },
+        {
+          "key": "B",
+          "text": "发邮件"
+        },
+        {
+          "key": "C",
+          "text": "把简历解析为固定字段"
+        },
+        {
+          "key": "D",
+          "text": "删除远程文件"
+        }
+      ],
+      "answer": "C",
+      "explanation_correct": "Structured Outputs 主要用于最终结果结构化，不一定触发外部动作。",
+      "explanation_wrong": "A/B/D都属于可能产生副作用的工具调用场景。",
+      "extension": "输出结构和执行动作要分清，否则会把信息抽取任务设计得过重。"
+    },
+    {
+      "id": 14,
+      "section": "第2章 Function Calling",
+      "type": "single_choice",
+      "question": "Function Calling 更适合哪类任务？",
+      "options": [
+        {
+          "key": "A",
+          "text": "输出论文摘要 JSON"
+        },
+        {
+          "key": "B",
+          "text": "对文本做情感分类"
+        },
+        {
+          "key": "C",
+          "text": "调用订单系统查询订单状态"
+        },
+        {
+          "key": "D",
+          "text": "把一段文字改写成正式语气"
+        }
+      ],
+      "answer": "C",
+      "explanation_correct": "查询订单状态需要触达外部系统，因此适合通过工具调用表达动作。",
+      "explanation_wrong": "A/B/D可以用结构化输出或普通生成完成，不一定需要工具。",
+      "extension": "判断是否需要 Function Calling 的关键是是否要访问或改变外部系统。"
+    },
+    {
+      "id": 15,
+      "section": "第2章 Function Calling",
+      "type": "single_choice",
+      "question": "JSON mode 的主要局限是什么？",
+      "options": [
+        {
+          "key": "A",
+          "text": "完全不能输出 JSON"
+        },
+        {
+          "key": "B",
+          "text": "只能保证业务语义正确"
+        },
+        {
+          "key": "C",
+          "text": "不能保证严格符合业务 Schema"
+        },
+        {
+          "key": "D",
+          "text": "只能用于图像任务"
+        }
+      ],
+      "answer": "C",
+      "explanation_correct": "JSON mode 只提升格式合法概率，不保证必填字段、枚举值和业务约束。",
+      "explanation_wrong": "A错误；B恰好相反；D无关。",
+      "extension": "生产环境要把 JSON mode 和严格 Schema 区分开。"
+    },
+    {
+      "id": 16,
+      "section": "第2章 Function Calling",
+      "type": "single_choice",
+      "question": "什么是只读工具？",
+      "options": [
+        {
+          "key": "A",
+          "text": "只查询信息、不改变外部系统状态的工具"
+        },
+        {
+          "key": "B",
+          "text": "只能在本地运行的工具"
+        },
+        {
+          "key": "C",
+          "text": "只能被管理员调用的工具"
+        },
+        {
+          "key": "D",
+          "text": "只能返回字符串的工具"
+        }
+      ],
+      "answer": "A",
+      "explanation_correct": "只读工具不会产生业务副作用，风险主要在答案质量。",
+      "explanation_wrong": "B/C/D都不是只读的定义。",
+      "extension": "只读工具更适合并行调用和自动重试。"
+    },
+    {
+      "id": 17,
+      "section": "第2章 Function Calling",
+      "type": "single_choice",
+      "question": "下面哪个属于副作用型工具？",
+      "options": [
+        {
+          "key": "A",
+          "text": "查询天气"
+        },
+        {
+          "key": "B",
+          "text": "查询文档"
+        },
+        {
+          "key": "C",
+          "text": "创建工单"
+        },
+        {
+          "key": "D",
+          "text": "读取配置"
+        }
+      ],
+      "answer": "C",
+      "explanation_correct": "创建工单会改变外部系统状态，是典型副作用。",
+      "explanation_wrong": "A/B/D主要是读取信息，不改变业务状态。",
+      "extension": "副作用型工具应默认幂等、审计、必要时审批。"
+    },
+    {
+      "id": 18,
+      "section": "第2章 Function Calling",
+      "type": "single_choice",
+      "question": "副作用型工具为什么要强调幂等？",
+      "options": [
+        {
+          "key": "A",
+          "text": "为了让模型输出更长"
+        },
+        {
+          "key": "B",
+          "text": "为了避免重试或重复调用造成重复扣费、重复工单等问题"
+        },
+        {
+          "key": "C",
+          "text": "为了提高 UI 颜色一致性"
+        },
+        {
+          "key": "D",
+          "text": "为了让所有错误都自动消失"
+        }
+      ],
+      "answer": "B",
+      "explanation_correct": "只要系统可能重试，就必须防止同一业务动作重复生效。",
+      "explanation_wrong": "A/C无关；D错误，幂等不能消除所有错误。",
+      "extension": "幂等键是副作用工具治理中的常见实现方式。"
+    },
+    {
+      "id": 19,
+      "section": "第2章 Function Calling",
+      "type": "single_choice",
+      "question": "高风险副作用动作通常应该如何处理？",
+      "options": [
+        {
+          "key": "A",
+          "text": "完全交给模型自动执行"
+        },
+        {
+          "key": "B",
+          "text": "默认走人工审批或明确业务规则确认"
+        },
+        {
+          "key": "C",
+          "text": "跳过日志"
+        },
+        {
+          "key": "D",
+          "text": "允许无限重试"
+        }
+      ],
+      "answer": "B",
+      "explanation_correct": "付款、删除、群发等动作需要人工或规则确认，降低不可逆风险。",
+      "explanation_wrong": "A/C/D都会放大事故风险。",
+      "extension": "模型可以准备草稿和理由，但最终执行权应受控。"
+    },
+    {
+      "id": 20,
+      "section": "第2章 Function Calling",
+      "type": "single_choice",
+      "question": "生产级工具调用链路的第一步通常是什么？",
+      "options": [
+        {
+          "key": "A",
+          "text": "直接执行所有工具"
+        },
+        {
+          "key": "B",
+          "text": "下发当前用户和场景可用的工具"
+        },
+        {
+          "key": "C",
+          "text": "删除历史状态"
+        },
+        {
+          "key": "D",
+          "text": "跳过 Schema 校验"
+        }
+      ],
+      "answer": "B",
+      "explanation_correct": "只暴露当前可用工具能降低误调用、安全风险和上下文成本。",
+      "explanation_wrong": "A/D不安全；C无关。",
+      "extension": "工具可见性过滤是 Agent 安全的第一道门。"
+    },
+    {
+      "id": 21,
+      "section": "第2章 Function Calling",
+      "type": "single_choice",
+      "question": "运行时治理校验通常不包括哪一项？",
+      "options": [
+        {
+          "key": "A",
+          "text": "Schema 校验"
+        },
+        {
+          "key": "B",
+          "text": "权限校验"
+        },
+        {
+          "key": "C",
+          "text": "业务规则校验"
+        },
+        {
+          "key": "D",
+          "text": "让模型直接拿数据库 root 密码"
+        }
+      ],
+      "answer": "D",
+      "explanation_correct": "给模型高权限凭据违反执行隔离原则。",
+      "explanation_wrong": "A/B/C都是运行时执行前的重要校验。",
+      "extension": "模型看到的参数和系统实际凭据应该隔离。"
+    },
+    {
+      "id": 22,
+      "section": "第2章 Function Calling",
+      "type": "single_choice",
+      "question": "工具执行器的主要价值是什么？",
+      "options": [
+        {
+          "key": "A",
+          "text": "让模型绕过权限"
+        },
+        {
+          "key": "B",
+          "text": "隔离模型和外部系统，统一处理超时、重试、签名、日志"
+        },
+        {
+          "key": "C",
+          "text": "替代所有模型推理"
+        },
+        {
+          "key": "D",
+          "text": "把所有返回值变成乱码"
+        }
+      ],
+      "answer": "B",
+      "explanation_correct": "执行器是模型和外部系统之间的安全边界。",
+      "explanation_wrong": "A/D错误；C不是执行器职责。",
+      "extension": "执行器可以看作 Agent 系统的数据面执行组件。"
+    },
+    {
+      "id": 23,
+      "section": "第2章 Function Calling",
+      "type": "single_choice",
+      "question": "为什么工具调用循环要设置最大步数？",
+      "options": [
+        {
+          "key": "A",
+          "text": "为了降低显示器亮度"
+        },
+        {
+          "key": "B",
+          "text": "防止模型陷入无限调用或无效循环"
+        },
+        {
+          "key": "C",
+          "text": "为了禁止所有工具"
+        },
+        {
+          "key": "D",
+          "text": "为了让答案永远更短"
+        }
+      ],
+      "answer": "B",
+      "explanation_correct": "模型可能不断尝试工具或反复修正，必须有终止条件。",
+      "explanation_wrong": "A/C/D不是关键原因。",
+      "extension": "最大步数、预算和超时共同构成循环保护。"
+    },
+    {
+      "id": 24,
+      "section": "第2章 Function Calling",
+      "type": "single_choice",
+      "question": "哪类场景最适合并行工具调用？",
+      "options": [
+        {
+          "key": "A",
+          "text": "多个独立只读查询"
+        },
+        {
+          "key": "B",
+          "text": "先扣费再发货"
+        },
+        {
+          "key": "C",
+          "text": "先创建工单再通知客户"
+        },
+        {
+          "key": "D",
+          "text": "审批未完成的删除操作"
+        }
+      ],
+      "answer": "A",
+      "explanation_correct": "独立只读查询没有顺序依赖和副作用，更适合并行。",
+      "explanation_wrong": "B/C有顺序和副作用；D需要审批，不能并行执行。",
+      "extension": "并行的前提是无依赖、无共享状态竞争、风险可控。"
+    },
+    {
+      "id": 25,
+      "section": "第2章 Function Calling",
+      "type": "single_choice",
+      "question": "为什么大规模工具集不能全量塞给模型？",
+      "options": [
+        {
+          "key": "A",
+          "text": "模型会因此不能输出中文"
+        },
+        {
+          "key": "B",
+          "text": "上下文成本高、选择精度下降、KV 缓存命中率降低"
+        },
+        {
+          "key": "C",
+          "text": "所有工具都会自动删除"
+        },
+        {
+          "key": "D",
+          "text": "会导致数据库无法启动"
+        }
+      ],
+      "answer": "B",
+      "explanation_correct": "工具过多会污染上下文并增加选择难度。",
+      "explanation_wrong": "A/C/D不成立。",
+      "extension": "工具搜索和延迟加载是大规模工具治理的常见方案。"
+    },
+    {
+      "id": 26,
+      "section": "第2章 Function Calling",
+      "type": "single_choice",
+      "question": "工具 Namespace 的作用更接近什么？",
+      "options": [
+        {
+          "key": "A",
+          "text": "按场景或领域组织工具，减少暴露范围"
+        },
+        {
+          "key": "B",
+          "text": "随机打乱工具名"
+        },
+        {
+          "key": "C",
+          "text": "隐藏所有工具描述"
+        },
+        {
+          "key": "D",
+          "text": "取消 Schema"
+        }
+      ],
+      "answer": "A",
+      "explanation_correct": "Namespace 可以帮助路由和裁剪工具集。",
+      "explanation_wrong": "B/C/D都会降低可用性或安全性。",
+      "extension": "例如 finance、calendar、gmail 可以作为不同能力命名空间。"
+    },
+    {
+      "id": 27,
+      "section": "第2章 Function Calling",
+      "type": "single_choice",
+      "question": "工具搜索/延迟加载的核心思想是什么？",
+      "options": [
+        {
+          "key": "A",
+          "text": "先全量加载所有 Schema"
+        },
+        {
+          "key": "B",
+          "text": "先匹配工具元数据，需要时再加载完整 Schema"
+        },
+        {
+          "key": "C",
+          "text": "永远不让模型看工具"
+        },
+        {
+          "key": "D",
+          "text": "只按字母顺序调用工具"
+        }
+      ],
+      "answer": "B",
+      "explanation_correct": "这能减少上下文压力并提升工具选择质量。",
+      "explanation_wrong": "A正是要避免的；C过度；D没有语义判断。",
+      "extension": "Progressive Disclosure 不只适用于 Skill，也适用于工具集。"
+    },
+    {
+      "id": 28,
+      "section": "第2章 Function Calling",
+      "type": "single_choice",
+      "question": "参数最小化原则的正确例子是？",
+      "options": [
+        {
+          "key": "A",
+          "text": "删除工具允许任意绝对路径"
+        },
+        {
+          "key": "B",
+          "text": "删除工具只允许传授权文件 ID"
+        },
+        {
+          "key": "C",
+          "text": "让模型输入 root 密码"
+        },
+        {
+          "key": "D",
+          "text": "让模型自由填写所有后端字段"
+        }
+      ],
+      "answer": "B",
+      "explanation_correct": "授权文件 ID 能把操作范围收敛在系统允许的资源内。",
+      "explanation_wrong": "A/C/D都会扩大危险自由度。",
+      "extension": "高风险参数应由系统侧补齐，而不是让模型自由生成。"
+    },
+    {
+      "id": 29,
+      "section": "第2章 Function Calling",
+      "type": "single_choice",
+      "question": "Tool Calling 中“模型继续推理”发生在什么时候？",
+      "options": [
+        {
+          "key": "A",
+          "text": "工具结果结构化回填之后"
+        },
+        {
+          "key": "B",
+          "text": "工具执行之前但没有任何上下文"
+        },
+        {
+          "key": "C",
+          "text": "系统关闭之后"
+        },
+        {
+          "key": "D",
+          "text": "永远不会发生"
+        }
+      ],
+      "answer": "A",
+      "explanation_correct": "模型需要根据工具结果决定继续调用、补充信息或最终回答。",
+      "explanation_wrong": "B缺少结果依据；C/D明显不对。",
+      "extension": "工具调用是一个循环，而不是一次性 API 代理。"
+    },
+    {
+      "id": 30,
+      "section": "第2章 Function Calling",
+      "type": "single_choice",
+      "question": "下面哪个最能体现“LLM 是控制面而非数据面”？",
+      "options": [
+        {
+          "key": "A",
+          "text": "LLM 负责表达动作意图，Runtime 负责执行和治理"
+        },
+        {
+          "key": "B",
+          "text": "LLM 直接写生产数据库"
+        },
+        {
+          "key": "C",
+          "text": "LLM 保存全部业务数据"
+        },
+        {
+          "key": "D",
+          "text": "LLM 绕过所有审计"
+        }
+      ],
+      "answer": "A",
+      "explanation_correct": "控制面负责决策意图，数据面负责实际操作。",
+      "explanation_wrong": "B/C/D都破坏执行隔离和审计。",
+      "extension": "这是回答 Agent 工程化问题时非常有用的架构视角。"
+    },
+    {
+      "id": 31,
+      "section": "第3章 Tool Schema",
+      "type": "single_choice",
+      "question": "Tool Schema 为什么不是简单参数注释？",
+      "options": [
+        {
+          "key": "A",
+          "text": "它同时服务模型选择、运行时校验和平台治理"
+        },
+        {
+          "key": "B",
+          "text": "它只能给人看"
+        },
+        {
+          "key": "C",
+          "text": "它只影响前端样式"
+        },
+        {
+          "key": "D",
+          "text": "它只能描述返回字符串"
+        }
+      ],
+      "answer": "A",
+      "explanation_correct": "Schema 是模型、Runtime、平台共同依赖的契约。",
+      "explanation_wrong": "B/C/D都低估了 Schema 的工程价值。",
+      "extension": "工具体系越大，Schema 治理越重要。"
+    },
+    {
+      "id": 32,
+      "section": "第3章 Tool Schema",
+      "type": "single_choice",
+      "question": "面向模型的 Schema 描述最应该写清什么？",
+      "options": [
+        {
+          "key": "A",
+          "text": "工具功能边界、适用场景、参数语义"
+        },
+        {
+          "key": "B",
+          "text": "数据库 root 密码"
+        },
+        {
+          "key": "C",
+          "text": "后端内部类名"
+        },
+        {
+          "key": "D",
+          "text": "服务器机房地址"
+        }
+      ],
+      "answer": "A",
+      "explanation_correct": "模型需要靠描述选择正确工具并填写参数。",
+      "explanation_wrong": "B/C/D不应暴露给模型，且与选择无关。",
+      "extension": "好的工具描述应写清“不适合做什么”。"
+    },
+    {
+      "id": 33,
+      "section": "第3章 Tool Schema",
+      "type": "single_choice",
+      "question": "面向运行时的 Schema 价值主要是什么？",
+      "options": [
+        {
+          "key": "A",
+          "text": "参数校验、权限治理、审计依据"
+        },
+        {
+          "key": "B",
+          "text": "提升屏幕刷新率"
+        },
+        {
+          "key": "C",
+          "text": "训练 embedding"
+        },
+        {
+          "key": "D",
+          "text": "控制网页字体"
+        }
+      ],
+      "answer": "A",
+      "explanation_correct": "运行时通过 Schema 做严格校验和策略判断。",
+      "explanation_wrong": "B/C/D无关。",
+      "extension": "Schema 能把很多错误提前挡在执行前。"
+    },
+    {
+      "id": 34,
+      "section": "第3章 Tool Schema",
+      "type": "single_choice",
+      "question": "面向平台的 Schema 价值主要是什么？",
+      "options": [
+        {
+          "key": "A",
+          "text": "工具注册、发现、版本管理、灰度、SDK 生成"
+        },
+        {
+          "key": "B",
+          "text": "加速鼠标移动"
+        },
+        {
+          "key": "C",
+          "text": "替代所有数据库索引"
+        },
+        {
+          "key": "D",
+          "text": "删除审计日志"
+        }
+      ],
+      "answer": "A",
+      "explanation_correct": "平台化工具体系依赖元数据治理。",
+      "explanation_wrong": "B/C/D不是平台 Schema 的目标。",
+      "extension": "没有标准 Schema，大规模工具生态很难维护。"
+    },
+    {
+      "id": 35,
+      "section": "第3章 Tool Schema",
+      "type": "single_choice",
+      "question": "哪个工具名设计更合理？",
+      "options": [
+        {
+          "key": "A",
+          "text": "run_api_v2"
+        },
+        {
+          "key": "B",
+          "text": "do_stuff"
+        },
+        {
+          "key": "C",
+          "text": "search_customer_orders"
+        },
+        {
+          "key": "D",
+          "text": "call_backend"
+        }
+      ],
+      "answer": "C",
+      "explanation_correct": "它表达了明确业务动作和对象。",
+      "explanation_wrong": "A/D暴露实现且不清晰；B过于模糊。",
+      "extension": "工具名是模型选择工具的重要信号。"
+    },
+    {
+      "id": 36,
+      "section": "第3章 Tool Schema",
+      "type": "single_choice",
+      "question": "工具描述中写“不适合做什么”的价值是什么？",
+      "options": [
+        {
+          "key": "A",
+          "text": "减少误调用"
+        },
+        {
+          "key": "B",
+          "text": "增加乱码"
+        },
+        {
+          "key": "C",
+          "text": "隐藏工具功能"
+        },
+        {
+          "key": "D",
+          "text": "让 Schema 失效"
+        }
+      ],
+      "answer": "A",
+      "explanation_correct": "边界描述能帮助模型在相似工具之间做正确选择。",
+      "explanation_wrong": "B/C/D错误。",
+      "extension": "负面边界常常比正面描述更能减少工具误用。"
+    },
+    {
+      "id": 37,
+      "section": "第3章 Tool Schema",
+      "type": "single_choice",
+      "question": "为什么参数名要用业务语义命名？",
+      "options": [
+        {
+          "key": "A",
+          "text": "让模型更容易理解字段含义"
+        },
+        {
+          "key": "B",
+          "text": "让字段越短越好"
+        },
+        {
+          "key": "C",
+          "text": "让后端无法解析"
+        },
+        {
+          "key": "D",
+          "text": "为了隐藏数据类型"
+        }
+      ],
+      "answer": "A",
+      "explanation_correct": "例如 user_email 比 user 更明确，能减少填参错误。",
+      "explanation_wrong": "B过度追求短；C/D错误。",
+      "extension": "Schema 是给模型和系统共同使用的，不只是后端字段。"
+    },
+    {
+      "id": 38,
+      "section": "第3章 Tool Schema",
+      "type": "single_choice",
+      "question": "为什么要禁止额外字段？",
+      "options": [
+        {
+          "key": "A",
+          "text": "避免脏数据和隐性故障"
+        },
+        {
+          "key": "B",
+          "text": "让工具永远不能调用"
+        },
+        {
+          "key": "C",
+          "text": "让模型不能输出任何参数"
+        },
+        {
+          "key": "D",
+          "text": "为了减少硬盘容量"
+        }
+      ],
+      "answer": "A",
+      "explanation_correct": "额外字段可能被误当成业务参数或进入日志，造成不可预测问题。",
+      "explanation_wrong": "B/C/D不成立。",
+      "extension": "严格 Schema 是生产级工具调用的重要习惯。"
+    },
+    {
+      "id": 39,
+      "section": "第3章 Tool Schema",
+      "type": "single_choice",
+      "question": "工具返回值结构化时，哪个字段最有利于运行时决策？",
+      "options": [
+        {
+          "key": "A",
+          "text": "是否可重试"
+        },
+        {
+          "key": "B",
+          "text": "随机诗句"
+        },
+        {
+          "key": "C",
+          "text": "背景音乐"
+        },
+        {
+          "key": "D",
+          "text": "图片颜色"
+        }
+      ],
+      "answer": "A",
+      "explanation_correct": "Runtime 可以根据可重试标记决定是否自动重试或转人工。",
+      "explanation_wrong": "B/C/D与执行决策无关。",
+      "extension": "返回结构应区分业务失败、系统失败、权限失败等类型。"
+    },
+    {
+      "id": 40,
+      "section": "第3章 Tool Schema",
+      "type": "single_choice",
+      "question": "为什么工具返回不应只是一段自然语言？",
+      "options": [
+        {
+          "key": "A",
+          "text": "不利于自动判断成功、错误类型、重试和审批"
+        },
+        {
+          "key": "B",
+          "text": "自然语言永远不可读"
+        },
+        {
+          "key": "C",
+          "text": "模型完全不能理解文本"
+        },
+        {
+          "key": "D",
+          "text": "工具不能返回文本"
+        }
+      ],
+      "answer": "A",
+      "explanation_correct": "结构化结果更利于流程控制和审计。",
+      "explanation_wrong": "B/C/D都过于绝对。",
+      "extension": "可以同时返回人类可读摘要和机器可读字段。"
+    },
+    {
+      "id": 41,
+      "section": "第3章 Tool Schema",
+      "type": "single_choice",
+      "question": "能力最小化原则指什么？",
+      "options": [
+        {
+          "key": "A",
+          "text": "只暴露当前任务需要的工具"
+        },
+        {
+          "key": "B",
+          "text": "让模型看到所有内部接口"
+        },
+        {
+          "key": "C",
+          "text": "把工具描述写得越长越好"
+        },
+        {
+          "key": "D",
+          "text": "让所有用户都有管理员权限"
+        }
+      ],
+      "answer": "A",
+      "explanation_correct": "减少工具可见范围能降低误调用和越权风险。",
+      "explanation_wrong": "B/D危险；C不一定，描述要清晰而非无限长。",
+      "extension": "能力最小化是 Agent 安全治理第一层。"
+    },
+    {
+      "id": 42,
+      "section": "第3章 Tool Schema",
+      "type": "single_choice",
+      "question": "执行隔离原则的核心是什么？",
+      "options": [
+        {
+          "key": "A",
+          "text": "模型不能直连高权限系统，工具调用经过沙箱或服务层"
+        },
+        {
+          "key": "B",
+          "text": "让模型直接登录数据库"
+        },
+        {
+          "key": "C",
+          "text": "所有工具在用户浏览器执行"
+        },
+        {
+          "key": "D",
+          "text": "取消鉴权"
+        }
+      ],
+      "answer": "A",
+      "explanation_correct": "隔离层统一处理权限、签名、审计、限流等。",
+      "explanation_wrong": "B/D危险；C不适合大多数企业后端能力。",
+      "extension": "执行隔离把模型风险限制在可控边界内。"
+    },
+    {
+      "id": 43,
+      "section": "第3章 Tool Schema",
+      "type": "single_choice",
+      "question": "审计溯源至少应该记录什么？",
+      "options": [
+        {
+          "key": "A",
+          "text": "调用方、工具、参数、结果、时间"
+        },
+        {
+          "key": "B",
+          "text": "用户鼠标轨迹"
+        },
+        {
+          "key": "C",
+          "text": "随机数种子即可"
+        },
+        {
+          "key": "D",
+          "text": "只记录最终答案，不记录工具"
+        }
+      ],
+      "answer": "A",
+      "explanation_correct": "这些信息是排查误调用、越权和事故的基础。",
+      "explanation_wrong": "B通常不是核心；C不足；D缺少关键链路。",
+      "extension": "Agent Trace 应能复原模型选择工具到执行结果的全过程。"
+    },
+    {
+      "id": 44,
+      "section": "第3章 Tool Schema",
+      "type": "single_choice",
+      "question": "为什么高风险写操作需要人工审批？",
+      "options": [
+        {
+          "key": "A",
+          "text": "因为模型输出可能错误，且副作用可能不可逆"
+        },
+        {
+          "key": "B",
+          "text": "因为审批能提升模型参数量"
+        },
+        {
+          "key": "C",
+          "text": "因为审批可以替代所有权限"
+        },
+        {
+          "key": "D",
+          "text": "因为只读工具也必须全部审批"
+        }
+      ],
+      "answer": "A",
+      "explanation_correct": "高风险动作需要额外确认，降低不可逆事故。",
+      "explanation_wrong": "B错误；C审批不能替代权限；D过度，普通只读查询不一定审批。",
+      "extension": "审批流常作为 Workflow 中的显式节点。"
+    },
+    {
+      "id": 45,
+      "section": "第3章 Tool Schema",
+      "type": "single_choice",
+      "question": "工具版本管理的意义是什么？",
+      "options": [
+        {
+          "key": "A",
+          "text": "支持灰度、回滚和兼容性治理"
+        },
+        {
+          "key": "B",
+          "text": "让工具名每天随机变化"
+        },
+        {
+          "key": "C",
+          "text": "让旧任务无法复现"
+        },
+        {
+          "key": "D",
+          "text": "取消 Schema 校验"
+        }
+      ],
+      "answer": "A",
+      "explanation_correct": "工具变更会影响模型选择和参数结构，需要可控发布。",
+      "explanation_wrong": "B/C/D都破坏稳定性。",
+      "extension": "工具版本变化也应进入评测和审计。"
+    },
+    {
+      "id": 46,
+      "section": "第4章 MCP",
+      "type": "single_choice",
+      "question": "MCP 的全称是什么？",
+      "options": [
+        {
+          "key": "A",
+          "text": "Model Context Protocol"
+        },
+        {
+          "key": "B",
+          "text": "Multi Cache Pipeline"
+        },
+        {
+          "key": "C",
+          "text": "Memory Control Program"
+        },
+        {
+          "key": "D",
+          "text": "Model Compute Proxy"
+        }
+      ],
+      "answer": "A",
+      "explanation_correct": "MCP 是模型上下文协议，用于 AI 应用接入工具、资源和提示模板。",
+      "explanation_wrong": "B/C/D都是干扰项。",
+      "extension": "MCP 关注 AI 能力接入，不是普通业务 API 命名。"
+    },
+    {
+      "id": 47,
+      "section": "第4章 MCP",
+      "type": "single_choice",
+      "question": "MCP 主要解决什么问题？",
+      "options": [
+        {
+          "key": "A",
+          "text": "外部能力如何标准化接入 Agent 系统"
+        },
+        {
+          "key": "B",
+          "text": "GPU 如何训练模型"
+        },
+        {
+          "key": "C",
+          "text": "如何写 CSS"
+        },
+        {
+          "key": "D",
+          "text": "如何压缩图片"
+        }
+      ],
+      "answer": "A",
+      "explanation_correct": "MCP 统一 Tools、Resources、Prompts 等能力交互。",
+      "explanation_wrong": "B/C/D不是 MCP 核心。",
+      "extension": "MCP 更靠近能力侧，Function Calling 更靠近模型侧。"
+    },
+    {
+      "id": 48,
+      "section": "第4章 MCP",
+      "type": "single_choice",
+      "question": "MCP 和普通 HTTP API 的关键区别是什么？",
+      "options": [
+        {
+          "key": "A",
+          "text": "MCP 额外强调能力发现、资源、提示模板和生命周期管理"
+        },
+        {
+          "key": "B",
+          "text": "MCP 不能远程通信"
+        },
+        {
+          "key": "C",
+          "text": "HTTP API 一定比 MCP 安全"
+        },
+        {
+          "key": "D",
+          "text": "MCP 只能返回图片"
+        }
+      ],
+      "answer": "A",
+      "explanation_correct": "MCP 是面向 AI 应用的能力接入规范，不只是请求响应。",
+      "explanation_wrong": "B错误，MCP 可用 HTTP；C过于绝对；D错误。",
+      "extension": "普通 API 可以被 MCP 封装成 AI 可发现能力。"
+    },
+    {
+      "id": 49,
+      "section": "第4章 MCP",
+      "type": "single_choice",
+      "question": "MCP 中 Tools 主要表示什么？",
+      "options": [
+        {
+          "key": "A",
+          "text": "可执行动作"
+        },
+        {
+          "key": "B",
+          "text": "只读网页样式"
+        },
+        {
+          "key": "C",
+          "text": "模型权重"
+        },
+        {
+          "key": "D",
+          "text": "GPU 显存"
+        }
+      ],
+      "answer": "A",
+      "explanation_correct": "Tools 对应可以被调用的操作能力。",
+      "explanation_wrong": "B/C/D不是 MCP Tools 定义。",
+      "extension": "Tools 可能只读，也可能有副作用，仍需运行时治理。"
+    },
+    {
+      "id": 50,
+      "section": "第4章 MCP",
+      "type": "single_choice",
+      "question": "MCP 中 Resources 主要表示什么？",
+      "options": [
+        {
+          "key": "A",
+          "text": "只读上下文资源"
+        },
+        {
+          "key": "B",
+          "text": "必须产生副作用的动作"
+        },
+        {
+          "key": "C",
+          "text": "模型训练数据增强算法"
+        },
+        {
+          "key": "D",
+          "text": "浏览器插件主题"
+        }
+      ],
+      "answer": "A",
+      "explanation_correct": "Resources 给模型提供背景信息，如文件、记录、系统状态。",
+      "explanation_wrong": "B是 Tools 更常见的动作语义；C/D无关。",
+      "extension": "把只读上下文建模为 Resource，比全部包装成 Tool 更自然。"
+    },
+    {
+      "id": 51,
+      "section": "第4章 MCP",
+      "type": "single_choice",
+      "question": "MCP 中 Prompts 主要表示什么？",
+      "options": [
+        {
+          "key": "A",
+          "text": "可参数化提示模板"
+        },
+        {
+          "key": "B",
+          "text": "用户密码"
+        },
+        {
+          "key": "C",
+          "text": "GPU 配置"
+        },
+        {
+          "key": "D",
+          "text": "数据库表锁"
+        }
+      ],
+      "answer": "A",
+      "explanation_correct": "Prompts 用于标准化特定任务的指令模板。",
+      "explanation_wrong": "B/C/D不是 MCP Prompt。",
+      "extension": "Prompt 也可以作为平台资产管理，而不是散落在代码中。"
+    },
+    {
+      "id": 52,
+      "section": "第4章 MCP",
+      "type": "single_choice",
+      "question": "为什么 MCP 要区分 Tools、Resources、Prompts？",
+      "options": [
+        {
+          "key": "A",
+          "text": "因为三者分别对应动作、上下文和任务指令"
+        },
+        {
+          "key": "B",
+          "text": "因为名字更长"
+        },
+        {
+          "key": "C",
+          "text": "因为这样可以取消权限"
+        },
+        {
+          "key": "D",
+          "text": "因为模型只能识别三种英文单词"
+        }
+      ],
+      "answer": "A",
+      "explanation_correct": "区分能力类型能让设计更清晰，也便于治理。",
+      "explanation_wrong": "B/C/D错误。",
+      "extension": "不是所有上下文都应该设计成可执行工具。"
+    },
+    {
+      "id": 53,
+      "section": "第4章 MCP",
+      "type": "single_choice",
+      "question": "MCP 与 Function Calling 的关系更接近哪种？",
+      "options": [
+        {
+          "key": "A",
+          "text": "互补：Function Calling 表达动作意图，MCP 接入外部能力"
+        },
+        {
+          "key": "B",
+          "text": "完全相同"
+        },
+        {
+          "key": "C",
+          "text": "互相排斥"
+        },
+        {
+          "key": "D",
+          "text": "MCP 只能用于训练阶段"
+        }
+      ],
+      "answer": "A",
+      "explanation_correct": "生产系统可由模型发起 Function Calling，再由 Runtime 通过 MCP 调用能力服务。",
+      "explanation_wrong": "B/C/D不符合定位。",
+      "extension": "一个偏模型侧，一个偏能力接入侧。"
+    },
+    {
+      "id": 54,
+      "section": "第4章 MCP",
+      "type": "single_choice",
+      "question": "Stdio 模式更适合什么场景？",
+      "options": [
+        {
+          "key": "A",
+          "text": "本地开发工具、IDE 插件等单机场景"
+        },
+        {
+          "key": "B",
+          "text": "跨国多租户服务"
+        },
+        {
+          "key": "C",
+          "text": "大规模支付网关"
+        },
+        {
+          "key": "D",
+          "text": "公开互联网高并发服务"
+        }
+      ],
+      "answer": "A",
+      "explanation_correct": "Stdio 简单轻量，适合本地进程通信。",
+      "explanation_wrong": "B/C/D更适合 HTTP/网关化部署。",
+      "extension": "本地 MCP Server 常用 Stdio 连接桌面或开发工具。"
+    },
+    {
+      "id": 55,
+      "section": "第4章 MCP",
+      "type": "single_choice",
+      "question": "HTTP 模式更适合什么场景？",
+      "options": [
+        {
+          "key": "A",
+          "text": "远程服务、多租户、企业级部署"
+        },
+        {
+          "key": "B",
+          "text": "只能在单机标准输入输出中通信"
+        },
+        {
+          "key": "C",
+          "text": "完全离线的临时脚本"
+        },
+        {
+          "key": "D",
+          "text": "手写纸质文档"
+        }
+      ],
+      "answer": "A",
+      "explanation_correct": "HTTP 便于远程访问、网关治理和多租户部署。",
+      "explanation_wrong": "B是 Stdio；C/D不合适。",
+      "extension": "企业里通常会在 HTTP 模式前加统一网关。"
+    },
+    {
+      "id": 56,
+      "section": "第4章 MCP",
+      "type": "single_choice",
+      "question": "企业级 MCP 为什么常用网关/代理模式？",
+      "options": [
+        {
+          "key": "A",
+          "text": "统一认证、审计、配额、权限和服务发现"
+        },
+        {
+          "key": "B",
+          "text": "为了让每个客户端保存所有密钥"
+        },
+        {
+          "key": "C",
+          "text": "为了取消服务治理"
+        },
+        {
+          "key": "D",
+          "text": "因为直连一定更安全"
+        }
+      ],
+      "answer": "A",
+      "explanation_correct": "网关能集中治理能力服务，避免客户端直连失控。",
+      "explanation_wrong": "B/D危险；C相反。",
+      "extension": "网关是多租户和合规环境下的重要控制点。"
+    },
+    {
+      "id": 57,
+      "section": "第4章 MCP",
+      "type": "single_choice",
+      "question": "MCP 服务直连过多的主要风险是什么？",
+      "options": [
+        {
+          "key": "A",
+          "text": "认证、权限、审计和运维快速失控"
+        },
+        {
+          "key": "B",
+          "text": "模型永远无法输出中文"
+        },
+        {
+          "key": "C",
+          "text": "所有资源自动公开"
+        },
+        {
+          "key": "D",
+          "text": "前端页面无法加载 CSS"
+        }
+      ],
+      "answer": "A",
+      "explanation_correct": "每个客户端直连每个服务会形成复杂信任网，难统一治理。",
+      "explanation_wrong": "B/C/D不准确。",
+      "extension": "复杂系统中，集中入口往往比点对点直连更可控。"
+    },
+    {
+      "id": 58,
+      "section": "第4章 MCP",
+      "type": "single_choice",
+      "question": "MCP 的能力发现对 Agent 有什么价值？",
+      "options": [
+        {
+          "key": "A",
+          "text": "Agent 可以自动知道服务端有哪些可用能力"
+        },
+        {
+          "key": "B",
+          "text": "让模型不用任何权限"
+        },
+        {
+          "key": "C",
+          "text": "让工具无需描述"
+        },
+        {
+          "key": "D",
+          "text": "让所有调用都变成同步"
+        }
+      ],
+      "answer": "A",
+      "explanation_correct": "能力发现降低硬编码依赖，方便工具生态扩展。",
+      "explanation_wrong": "B/C/D错误。",
+      "extension": "能力发现仍要结合权限过滤，不能发现即等于可用。"
+    },
+    {
+      "id": 59,
+      "section": "第4章 MCP",
+      "type": "single_choice",
+      "question": "MCP Resources 与 RAG 文档片段的关系可以怎样理解？",
+      "options": [
+        {
+          "key": "A",
+          "text": "都可以作为只读上下文供模型使用"
+        },
+        {
+          "key": "B",
+          "text": "Resources 必须修改数据库"
+        },
+        {
+          "key": "C",
+          "text": "RAG 文档片段不能被读取"
+        },
+        {
+          "key": "D",
+          "text": "二者完全不能结合"
+        }
+      ],
+      "answer": "A",
+      "explanation_correct": "Resources 可以承载文件、文档、记录等上下文，和 RAG 有天然结合点。",
+      "explanation_wrong": "B/C/D错误。",
+      "extension": "资源访问仍要遵循权限和租户隔离。"
+    },
+    {
+      "id": 60,
+      "section": "第4章 MCP",
+      "type": "single_choice",
+      "question": "如果一个能力只是提供标准代码审查指令模板，更适合用 MCP 的哪类能力表示？",
+      "options": [
+        {
+          "key": "A",
+          "text": "Prompts"
+        },
+        {
+          "key": "B",
+          "text": "Tools"
+        },
+        {
+          "key": "C",
+          "text": "GPU"
+        },
+        {
+          "key": "D",
+          "text": "Webhook"
+        }
+      ],
+      "answer": "A",
+      "explanation_correct": "提示模板本身不是动作，也不是只读业务数据，更适合 Prompts。",
+      "explanation_wrong": "B可能过度包装；C/D不是 MCP 三类核心能力。",
+      "extension": "Prompt 模板参数化后可复用、可版本化。"
+    },
+    {
+      "id": 61,
+      "section": "第5章 A2A",
+      "type": "single_choice",
+      "question": "A2A 的核心定位是什么？",
+      "options": [
+        {
+          "key": "A",
+          "text": "Agent 与 Agent 之间的协作协议"
+        },
+        {
+          "key": "B",
+          "text": "模型与显卡之间的协议"
+        },
+        {
+          "key": "C",
+          "text": "数据库备份协议"
+        },
+        {
+          "key": "D",
+          "text": "网页渲染协议"
+        }
+      ],
+      "answer": "A",
+      "explanation_correct": "A2A 解决多个 Agent 如何协同推进任务。",
+      "explanation_wrong": "B/C/D不是 A2A 语义。",
+      "extension": "A2A 面向持续任务，不只是一次函数调用。"
+    },
+    {
+      "id": 62,
+      "section": "第5章 A2A",
+      "type": "single_choice",
+      "question": "A2A 和 MCP 的一句话区别是什么？",
+      "options": [
+        {
+          "key": "A",
+          "text": "MCP 接能力，A2A 协工作"
+        },
+        {
+          "key": "B",
+          "text": "MCP 只能训练模型，A2A 只能写 CSS"
+        },
+        {
+          "key": "C",
+          "text": "二者完全相同"
+        },
+        {
+          "key": "D",
+          "text": "A2A 只能用于数据库"
+        }
+      ],
+      "answer": "A",
+      "explanation_correct": "MCP 面向 Agent-to-Tool/Resource，A2A 面向 Agent-to-Agent。",
+      "explanation_wrong": "B/C/D错误。",
+      "extension": "面试中这句话非常好用。"
+    },
+    {
+      "id": 63,
+      "section": "第5章 A2A",
+      "type": "single_choice",
+      "question": "A2A 和 Tool Calling 的核心差异是什么？",
+      "options": [
+        {
+          "key": "A",
+          "text": "A2A 面向持续任务协作，Tool Calling 面向单次动作"
+        },
+        {
+          "key": "B",
+          "text": "Tool Calling 必须异步，A2A 必须同步"
+        },
+        {
+          "key": "C",
+          "text": "二者都只能返回字符串"
+        },
+        {
+          "key": "D",
+          "text": "A2A 不能有状态"
+        }
+      ],
+      "answer": "A",
+      "explanation_correct": "A2A 需要任务状态、产物、多轮交互和异步更新。",
+      "explanation_wrong": "B/C/D都不准确。",
+      "extension": "复杂协作不应该强行压成一个函数返回值。"
+    },
+    {
+      "id": 64,
+      "section": "第5章 A2A",
+      "type": "single_choice",
+      "question": "A2A 中 Task 表示什么？",
+      "options": [
+        {
+          "key": "A",
+          "text": "一件持续存在的工作，有状态、进度和产物"
+        },
+        {
+          "key": "B",
+          "text": "一次普通聊天消息"
+        },
+        {
+          "key": "C",
+          "text": "一个 GPU kernel"
+        },
+        {
+          "key": "D",
+          "text": "一个 CSS 类"
+        }
+      ],
+      "answer": "A",
+      "explanation_correct": "Task 是跨 Agent 协作的核心对象。",
+      "explanation_wrong": "B更接近 Message；C/D无关。",
+      "extension": "Task 可以跨越多轮、多小时甚至多天。"
+    },
+    {
+      "id": 65,
+      "section": "第5章 A2A",
+      "type": "single_choice",
+      "question": "A2A 中 Message 表示什么？",
+      "options": [
+        {
+          "key": "A",
+          "text": "一次通信消息"
+        },
+        {
+          "key": "B",
+          "text": "完整持久任务"
+        },
+        {
+          "key": "C",
+          "text": "产物版本库"
+        },
+        {
+          "key": "D",
+          "text": "工具 Schema"
+        }
+      ],
+      "answer": "A",
+      "explanation_correct": "Message 是交互载体，不等于整个任务。",
+      "explanation_wrong": "B是 Task；C是 Artifact 管理；D是工具契约。",
+      "extension": "理解 Task vs Message 是理解 A2A 的关键。"
+    },
+    {
+      "id": 66,
+      "section": "第5章 A2A",
+      "type": "single_choice",
+      "question": "Agent Card 的作用是什么？",
+      "options": [
+        {
+          "key": "A",
+          "text": "描述 Agent 身份、能力范围、交互模式和输入输出规范"
+        },
+        {
+          "key": "B",
+          "text": "保存模型权重"
+        },
+        {
+          "key": "C",
+          "text": "替代所有任务状态"
+        },
+        {
+          "key": "D",
+          "text": "记录用户银行卡"
+        }
+      ],
+      "answer": "A",
+      "explanation_correct": "调用方根据 Agent Card 发现和选择合适 Agent。",
+      "explanation_wrong": "B/C/D不是 Agent Card。",
+      "extension": "Agent Card 类似服务名片，但语义更面向智能体协作。"
+    },
+    {
+      "id": 67,
+      "section": "第5章 A2A",
+      "type": "single_choice",
+      "question": "A2A 中 Artifact 是什么？",
+      "options": [
+        {
+          "key": "A",
+          "text": "协作产生的工作产物"
+        },
+        {
+          "key": "B",
+          "text": "只能是聊天文本"
+        },
+        {
+          "key": "C",
+          "text": "数据库密码"
+        },
+        {
+          "key": "D",
+          "text": "临时错误码"
+        }
+      ],
+      "answer": "A",
+      "explanation_correct": "报告、代码、表格、文档等都可以是 Artifact。",
+      "explanation_wrong": "B过窄；C/D错误。",
+      "extension": "Artifact 作为一等公民，便于版本和后续协作。"
+    },
+    {
+      "id": 68,
+      "section": "第5章 A2A",
+      "type": "single_choice",
+      "question": "为什么 A2A 强调 Artifact？",
+      "options": [
+        {
+          "key": "A",
+          "text": "因为协作结果常常是报告、代码、表格等非单句文本"
+        },
+        {
+          "key": "B",
+          "text": "因为所有 Agent 都不能聊天"
+        },
+        {
+          "key": "C",
+          "text": "因为 Artifact 可以替代权限"
+        },
+        {
+          "key": "D",
+          "text": "因为 Artifact 不需要存储"
+        }
+      ],
+      "answer": "A",
+      "explanation_correct": "复杂工作需要产物沉淀和持续更新。",
+      "explanation_wrong": "B/C/D错误。",
+      "extension": "Artifact 管理通常要有版本、权限和生命周期。"
+    },
+    {
+      "id": 69,
+      "section": "第5章 A2A",
+      "type": "single_choice",
+      "question": "A2A 中 streaming 的作用是什么？",
+      "options": [
+        {
+          "key": "A",
+          "text": "持续推送阶段性结果"
+        },
+        {
+          "key": "B",
+          "text": "删除任务"
+        },
+        {
+          "key": "C",
+          "text": "禁止异步"
+        },
+        {
+          "key": "D",
+          "text": "替代身份认证"
+        }
+      ],
+      "answer": "A",
+      "explanation_correct": "Streaming 让调用方实时看到进度和中间产物。",
+      "explanation_wrong": "B/C/D错误。",
+      "extension": "长任务中，流式反馈能改善用户体验。"
+    },
+    {
+      "id": 70,
+      "section": "第5章 A2A",
+      "type": "single_choice",
+      "question": "A2A 中 polling 的含义是什么？",
+      "options": [
+        {
+          "key": "A",
+          "text": "调用方定期查询任务状态"
+        },
+        {
+          "key": "B",
+          "text": "服务端主动推送所有事件"
+        },
+        {
+          "key": "C",
+          "text": "永久阻塞请求"
+        },
+        {
+          "key": "D",
+          "text": "删除 Artifact"
+        }
+      ],
+      "answer": "A",
+      "explanation_correct": "Polling 是一种简单的异步进度获取方式。",
+      "explanation_wrong": "B更像 webhook/streaming；C/D错误。",
+      "extension": "Polling 适合不方便建立长连接的系统。"
+    },
+    {
+      "id": 71,
+      "section": "第5章 A2A",
+      "type": "single_choice",
+      "question": "A2A 中 webhook 的含义是什么？",
+      "options": [
+        {
+          "key": "A",
+          "text": "任务状态变化后回调通知调用方"
+        },
+        {
+          "key": "B",
+          "text": "调用方不停刷新"
+        },
+        {
+          "key": "C",
+          "text": "强制同步返回"
+        },
+        {
+          "key": "D",
+          "text": "只读文件格式"
+        }
+      ],
+      "answer": "A",
+      "explanation_correct": "Webhook 适合异步任务完成或状态变化通知。",
+      "explanation_wrong": "B是 polling；C错误；D无关。",
+      "extension": "Webhook 需要鉴权和幂等处理，避免重复通知造成问题。"
+    },
+    {
+      "id": 72,
+      "section": "第5章 A2A",
+      "type": "single_choice",
+      "question": "下面哪个场景更适合 A2A？",
+      "options": [
+        {
+          "key": "A",
+          "text": "法务 Agent、财务 Agent、项目 Agent 协作审合同"
+        },
+        {
+          "key": "B",
+          "text": "查询今天温度"
+        },
+        {
+          "key": "C",
+          "text": "把数字相加"
+        },
+        {
+          "key": "D",
+          "text": "读取一个配置项"
+        }
+      ],
+      "answer": "A",
+      "explanation_correct": "多个专长 Agent 协作推进同一任务，适合 A2A。",
+      "explanation_wrong": "B/C/D更适合普通工具或简单回答。",
+      "extension": "A2A 不应滥用于简单单步任务。"
+    },
+    {
+      "id": 73,
+      "section": "第5章 A2A",
+      "type": "single_choice",
+      "question": "跨 Agent 协作的核心是推进什么？",
+      "options": [
+        {
+          "key": "A",
+          "text": "Task 状态"
+        },
+        {
+          "key": "B",
+          "text": "浏览器滚动条"
+        },
+        {
+          "key": "C",
+          "text": "CSS 动画"
+        },
+        {
+          "key": "D",
+          "text": "模型显存"
+        }
+      ],
+      "answer": "A",
+      "explanation_correct": "A2A 的重点是任务状态、进度和产物，而非单条消息。",
+      "explanation_wrong": "B/C/D无关。",
+      "extension": "这也是 A2A 与聊天消息协议的重要区别。"
+    },
+    {
+      "id": 74,
+      "section": "第5章 A2A",
+      "type": "single_choice",
+      "question": "为什么不能把所有远端 Agent 都包装成普通工具？",
+      "options": [
+        {
+          "key": "A",
+          "text": "复杂 Agent 任务有状态、耗时长、会产生产物并需要多轮交互"
+        },
+        {
+          "key": "B",
+          "text": "因为工具不能有名字"
+        },
+        {
+          "key": "C",
+          "text": "因为远端 Agent 不能联网"
+        },
+        {
+          "key": "D",
+          "text": "因为普通工具一定更贵"
+        }
+      ],
+      "answer": "A",
+      "explanation_correct": "持续任务语义无法自然压缩为一次同步函数调用。",
+      "explanation_wrong": "B/C/D不是核心原因。",
+      "extension": "协议设计要匹配任务语义，而不是强行统一成函数。"
+    },
+    {
+      "id": 75,
+      "section": "第5章 A2A",
+      "type": "single_choice",
+      "question": "A2A 协作中 Agent Card 最需要避免的问题是什么？",
+      "options": [
+        {
+          "key": "A",
+          "text": "能力描述过泛，导致调用方误派任务"
+        },
+        {
+          "key": "B",
+          "text": "说明过于清晰"
+        },
+        {
+          "key": "C",
+          "text": "包含输入输出规范"
+        },
+        {
+          "key": "D",
+          "text": "写明支持异步"
+        }
+      ],
+      "answer": "A",
+      "explanation_correct": "能力边界不清会导致任务路由错误。",
+      "explanation_wrong": "B/C/D都是有益或正常信息。",
+      "extension": "Agent Card 和 Tool Schema 一样，需要写清适用边界。"
+    },
+    {
+      "id": 76,
+      "section": "第6章 状态管理",
+      "type": "single_choice",
+      "question": "Session 更偏向哪个层级？",
+      "options": [
+        {
+          "key": "A",
+          "text": "应用/SDK 层的运行时会话容器"
+        },
+        {
+          "key": "B",
+          "text": "长期知识图谱"
+        },
+        {
+          "key": "C",
+          "text": "数据库事务日志"
+        },
+        {
+          "key": "D",
+          "text": "GPU 线程块"
+        }
+      ],
+      "answer": "A",
+      "explanation_correct": "Session 通常承载一次交互的运行时上下文。",
+      "explanation_wrong": "B/C/D不是 Session 的主要语义。",
+      "extension": "Session 不一定等于完整历史对话。"
+    },
+    {
+      "id": 77,
+      "section": "第6章 状态管理",
+      "type": "single_choice",
+      "question": "Conversation 更偏向哪个层级？",
+      "options": [
+        {
+          "key": "A",
+          "text": "平台持久层的对话实体"
+        },
+        {
+          "key": "B",
+          "text": "一次工具调用"
+        },
+        {
+          "key": "C",
+          "text": "显卡执行流"
+        },
+        {
+          "key": "D",
+          "text": "网络路由表"
+        }
+      ],
+      "answer": "A",
+      "explanation_correct": "Conversation 保存历史消息和元数据，更偏持久记录。",
+      "explanation_wrong": "B/C/D无关。",
+      "extension": "很多平台把 Conversation 作为用户可见的对话记录。"
+    },
+    {
+      "id": 78,
+      "section": "第6章 状态管理",
+      "type": "single_choice",
+      "question": "Thread 在工作流中更接近什么？",
+      "options": [
+        {
+          "key": "A",
+          "text": "一条独立执行路径或任务脉络"
+        },
+        {
+          "key": "B",
+          "text": "浏览器标签页颜色"
+        },
+        {
+          "key": "C",
+          "text": "纯数据库字段"
+        },
+        {
+          "key": "D",
+          "text": "只读资源文件"
+        }
+      ],
+      "answer": "A",
+      "explanation_correct": "Thread 表示工作流/图执行中的脉络。",
+      "explanation_wrong": "B/C/D不准确。",
+      "extension": "多分支工作流可能产生多个 Thread。"
+    },
+    {
+      "id": 79,
+      "section": "第6章 状态管理",
+      "type": "single_choice",
+      "question": "持久状态和模型上下文为什么要分离？",
+      "options": [
+        {
+          "key": "A",
+          "text": "系统记住的信息不等于每轮都要喂给模型"
+        },
+        {
+          "key": "B",
+          "text": "因为模型不能读取文本"
+        },
+        {
+          "key": "C",
+          "text": "因为状态只能存在显卡里"
+        },
+        {
+          "key": "D",
+          "text": "因为上下文越多一定越好"
+        }
+      ],
+      "answer": "A",
+      "explanation_correct": "分离能降低成本、噪声和泄漏风险。",
+      "explanation_wrong": "B/C错误；D恰好相反，过多上下文可能干扰模型。",
+      "extension": "这是长任务 Agent 的核心设计原则。"
+    },
+    {
+      "id": 80,
+      "section": "第6章 状态管理",
+      "type": "single_choice",
+      "question": "下面哪项属于持久状态？",
+      "options": [
+        {
+          "key": "A",
+          "text": "任务进度和已生成产物"
+        },
+        {
+          "key": "B",
+          "text": "当前屏幕亮度"
+        },
+        {
+          "key": "C",
+          "text": "随机背景音乐"
+        },
+        {
+          "key": "D",
+          "text": "模型参数梯度"
+        }
+      ],
+      "answer": "A",
+      "explanation_correct": "任务进度、历史产物、权限等需要系统侧持久保存。",
+      "explanation_wrong": "B/C无关；D属于训练过程，不是普通 Agent 运行状态。",
+      "extension": "持久状态应可恢复、可审计、可权限控制。"
+    },
+    {
+      "id": 81,
+      "section": "第6章 状态管理",
+      "type": "single_choice",
+      "question": "模型上下文指什么？",
+      "options": [
+        {
+          "key": "A",
+          "text": "每轮推理时实际发送给模型的内容"
+        },
+        {
+          "key": "B",
+          "text": "系统保存过的全部数据"
+        },
+        {
+          "key": "C",
+          "text": "所有数据库表"
+        },
+        {
+          "key": "D",
+          "text": "用户硬盘全部文件"
+        }
+      ],
+      "answer": "A",
+      "explanation_correct": "上下文是持久状态经过筛选和组装后的子集。",
+      "explanation_wrong": "B/C/D范围过大且危险。",
+      "extension": "好的上下文组装决定模型能否读到关键状态。"
+    },
+    {
+      "id": 82,
+      "section": "第6章 状态管理",
+      "type": "single_choice",
+      "question": "把所有历史都塞进模型上下文会导致什么？",
+      "options": [
+        {
+          "key": "A",
+          "text": "Token 成本上升、噪声增加、泄漏风险变大"
+        },
+        {
+          "key": "B",
+          "text": "权限天然更安全"
+        },
+        {
+          "key": "C",
+          "text": "模型永远不会出错"
+        },
+        {
+          "key": "D",
+          "text": "工具自动幂等"
+        }
+      ],
+      "answer": "A",
+      "explanation_correct": "过长上下文会干扰推理并带来成本和安全问题。",
+      "explanation_wrong": "B/C/D错误。",
+      "extension": "长上下文不是状态管理的替代品。"
+    },
+    {
+      "id": 83,
+      "section": "第6章 状态管理",
+      "type": "single_choice",
+      "question": "Compaction 的主要作用是什么？",
+      "options": [
+        {
+          "key": "A",
+          "text": "提炼长对话/长任务历史，只保留未来需要的信息"
+        },
+        {
+          "key": "B",
+          "text": "删除所有状态"
+        },
+        {
+          "key": "C",
+          "text": "把所有内容逐字复制"
+        },
+        {
+          "key": "D",
+          "text": "让工具不可用"
+        }
+      ],
+      "answer": "A",
+      "explanation_correct": "Compaction 关注有效信息保留，而不是简单清空。",
+      "explanation_wrong": "B/C/D都错误。",
+      "extension": "Compaction 应保留目标、约束、进度、失败、产物和等待状态。"
+    },
+    {
+      "id": 84,
+      "section": "第6章 状态管理",
+      "type": "single_choice",
+      "question": "Compaction 和普通摘要的区别更接近哪项？",
+      "options": [
+        {
+          "key": "A",
+          "text": "Compaction 面向后续执行需要，普通摘要更偏内容概括"
+        },
+        {
+          "key": "B",
+          "text": "Compaction 必须删除关键约束"
+        },
+        {
+          "key": "C",
+          "text": "普通摘要一定不能给人看"
+        },
+        {
+          "key": "D",
+          "text": "两者完全无关"
+        }
+      ],
+      "answer": "A",
+      "explanation_correct": "Compaction 的目标是让任务继续稳定推进。",
+      "explanation_wrong": "B错误；C过于绝对；D不准确。",
+      "extension": "长任务中，压缩结果应服务下一步决策。"
+    },
+    {
+      "id": 85,
+      "section": "第6章 状态管理",
+      "type": "single_choice",
+      "question": "长任务恢复时，最重要的状态信息不包括哪项？",
+      "options": [
+        {
+          "key": "A",
+          "text": "当前阶段"
+        },
+        {
+          "key": "B",
+          "text": "已完成步骤"
+        },
+        {
+          "key": "C",
+          "text": "等待输入状态"
+        },
+        {
+          "key": "D",
+          "text": "随机选择的壁纸"
+        }
+      ],
+      "answer": "D",
+      "explanation_correct": "壁纸通常与任务恢复无关。",
+      "explanation_wrong": "A/B/C都是恢复执行所需的关键状态。",
+      "extension": "恢复点设计越清楚，越不容易重复副作用。"
+    },
+    {
+      "id": 86,
+      "section": "第6章 状态管理",
+      "type": "single_choice",
+      "question": "为什么敏感信息不应长期滞留在模型上下文？",
+      "options": [
+        {
+          "key": "A",
+          "text": "会增加泄漏和误用风险"
+        },
+        {
+          "key": "B",
+          "text": "模型无法处理任何敏感字"
+        },
+        {
+          "key": "C",
+          "text": "敏感信息会让 JSON 失效"
+        },
+        {
+          "key": "D",
+          "text": "敏感信息只能存在图片里"
+        }
+      ],
+      "answer": "A",
+      "explanation_correct": "上下文会进入模型调用、日志或 Trace，需要最小化。",
+      "explanation_wrong": "B/C/D错误。",
+      "extension": "敏感信息应在系统侧按需取用、脱敏和审计。"
+    },
+    {
+      "id": 87,
+      "section": "第6章 状态管理",
+      "type": "single_choice",
+      "question": "任务状态机设计的价值是什么？",
+      "options": [
+        {
+          "key": "A",
+          "text": "让任务的阶段、转移和恢复边界清晰"
+        },
+        {
+          "key": "B",
+          "text": "让模型不需要工具"
+        },
+        {
+          "key": "C",
+          "text": "让所有异常自动消失"
+        },
+        {
+          "key": "D",
+          "text": "让用户不能取消任务"
+        }
+      ],
+      "answer": "A",
+      "explanation_correct": "状态机有助于取消、恢复、审批和补偿。",
+      "explanation_wrong": "B/C/D错误。",
+      "extension": "长生命周期 Agent 任务最好显式建模状态。"
+    },
+    {
+      "id": 88,
+      "section": "第6章 状态管理",
+      "type": "single_choice",
+      "question": "Conversation 历史和长期记忆的关系是什么？",
+      "options": [
+        {
+          "key": "A",
+          "text": "Conversation 是对话记录，长期记忆是筛选后可跨会话复用的信息"
+        },
+        {
+          "key": "B",
+          "text": "二者永远完全相同"
+        },
+        {
+          "key": "C",
+          "text": "长期记忆不能持久化"
+        },
+        {
+          "key": "D",
+          "text": "Conversation 只能保存工具结果"
+        }
+      ],
+      "answer": "A",
+      "explanation_correct": "不是所有对话内容都值得进入长期记忆。",
+      "explanation_wrong": "B/C/D错误。",
+      "extension": "记忆写入也需要权限、安全和用户意愿治理。"
+    },
+    {
+      "id": 89,
+      "section": "第6章 状态管理",
+      "type": "single_choice",
+      "question": "上下文组装时最应该遵循什么原则？",
+      "options": [
+        {
+          "key": "A",
+          "text": "只放当前推理真正需要的信息"
+        },
+        {
+          "key": "B",
+          "text": "越长越好"
+        },
+        {
+          "key": "C",
+          "text": "把所有租户数据混合"
+        },
+        {
+          "key": "D",
+          "text": "隐藏任务目标"
+        }
+      ],
+      "answer": "A",
+      "explanation_correct": "上下文是为当前推理服务的精简输入。",
+      "explanation_wrong": "B/C/D都会降低质量或安全性。",
+      "extension": "上下文组装是 Runtime 的核心能力之一。"
+    },
+    {
+      "id": 90,
+      "section": "第6章 状态管理",
+      "type": "single_choice",
+      "question": "“系统记住”和“模型看到”的关系应如何处理？",
+      "options": [
+        {
+          "key": "A",
+          "text": "系统可以记住更多，但模型只看必要子集"
+        },
+        {
+          "key": "B",
+          "text": "模型必须看到全部系统状态"
+        },
+        {
+          "key": "C",
+          "text": "系统不能保存任何状态"
+        },
+        {
+          "key": "D",
+          "text": "模型看到越多越安全"
+        }
+      ],
+      "answer": "A",
+      "explanation_correct": "持久状态与模型上下文分离能兼顾连续性和安全性。",
+      "explanation_wrong": "B/D危险；C无法支撑长任务。",
+      "extension": "这是 Agent 状态治理的基础原则。"
+    },
+    {
+      "id": 91,
+      "section": "第7章 Workflow",
+      "type": "single_choice",
+      "question": "Workflow 和 Agent 的关系最准确的是？",
+      "options": [
+        {
+          "key": "A",
+          "text": "互补：Workflow 管流程正确性，Agent 管步骤内智能性"
+        },
+        {
+          "key": "B",
+          "text": "完全互斥"
+        },
+        {
+          "key": "C",
+          "text": "Agent 能替代所有 Workflow"
+        },
+        {
+          "key": "D",
+          "text": "Workflow 只能用于静态网页"
+        }
+      ],
+      "answer": "A",
+      "explanation_correct": "生产系统常用 Workflow 包住 Agent。",
+      "explanation_wrong": "B/C/D不准确。",
+      "extension": "确定性主干交给 Workflow，不确定性判断交给 Agent。"
+    },
+    {
+      "id": 92,
+      "section": "第7章 Workflow",
+      "type": "single_choice",
+      "question": "Workflow 更适合负责什么？",
+      "options": [
+        {
+          "key": "A",
+          "text": "步骤顺序、分支、审批、超时、状态转移"
+        },
+        {
+          "key": "B",
+          "text": "自由写诗"
+        },
+        {
+          "key": "C",
+          "text": "生成所有业务想法"
+        },
+        {
+          "key": "D",
+          "text": "替代数据库"
+        }
+      ],
+      "answer": "A",
+      "explanation_correct": "Workflow 负责流程控制和可靠推进。",
+      "explanation_wrong": "B/C更偏模型能力；D无关。",
+      "extension": "把主流程固化能降低 Agent 失控风险。"
+    },
+    {
+      "id": 93,
+      "section": "第7章 Workflow",
+      "type": "single_choice",
+      "question": "Agent 更适合负责什么？",
+      "options": [
+        {
+          "key": "A",
+          "text": "意图理解、任务分解、工具选择、复杂判断"
+        },
+        {
+          "key": "B",
+          "text": "数据库事务日志压缩"
+        },
+        {
+          "key": "C",
+          "text": "网卡驱动"
+        },
+        {
+          "key": "D",
+          "text": "硬盘格式化"
+        }
+      ],
+      "answer": "A",
+      "explanation_correct": "这些任务依赖语义理解和不确定性推理。",
+      "explanation_wrong": "B/C/D不是 Agent 的主要职责。",
+      "extension": "Agent 节点应嵌入到受控工作流中。"
+    },
+    {
+      "id": 94,
+      "section": "第7章 Workflow",
+      "type": "single_choice",
+      "question": "“Workflow 包住 Agent”是什么意思？",
+      "options": [
+        {
+          "key": "A",
+          "text": "主干流程由 Workflow 控制，推理节点调用 Agent"
+        },
+        {
+          "key": "B",
+          "text": "把 Workflow 写进模型权重"
+        },
+        {
+          "key": "C",
+          "text": "让 Agent 自由删除流程"
+        },
+        {
+          "key": "D",
+          "text": "只使用自然语言，不写任何状态"
+        }
+      ],
+      "answer": "A",
+      "explanation_correct": "这样既保留智能性，又保证流程边界可控。",
+      "explanation_wrong": "B/C/D错误。",
+      "extension": "这是生产级 Agent 编排的常见模式。"
+    },
+    {
+      "id": 95,
+      "section": "第7章 Durable Execution",
+      "type": "single_choice",
+      "question": "Durable Execution 解决什么问题？",
+      "options": [
+        {
+          "key": "A",
+          "text": "流程崩溃、中断或等待后可从正确状态继续"
+        },
+        {
+          "key": "B",
+          "text": "让接口永不失败"
+        },
+        {
+          "key": "C",
+          "text": "让模型不需要上下文"
+        },
+        {
+          "key": "D",
+          "text": "让所有任务同步执行"
+        }
+      ],
+      "answer": "A",
+      "explanation_correct": "持久执行关注流程级恢复语义。",
+      "explanation_wrong": "B过于绝对；C/D错误。",
+      "extension": "Durable Execution 是长任务系统可靠性的核心能力。"
+    },
+    {
+      "id": 96,
+      "section": "第7章 Durable Execution",
+      "type": "single_choice",
+      "question": "Durable Execution 和 Retry 的区别是什么？",
+      "options": [
+        {
+          "key": "A",
+          "text": "Retry 是局部动作重试，Durable Execution 是流程级断点续跑"
+        },
+        {
+          "key": "B",
+          "text": "二者完全一样"
+        },
+        {
+          "key": "C",
+          "text": "Retry 只能用于人工审批"
+        },
+        {
+          "key": "D",
+          "text": "Durable Execution 只能用于 CSS"
+        }
+      ],
+      "answer": "A",
+      "explanation_correct": "Retry 解决单点故障，持久执行解决长流程恢复。",
+      "explanation_wrong": "B/C/D错误。",
+      "extension": "面试时可用“点上容错 vs 面上可靠”概括。"
+    },
+    {
+      "id": 97,
+      "section": "第7章 Durable Execution",
+      "type": "single_choice",
+      "question": "流程第 7 步崩溃后恢复，理想行为是什么？",
+      "options": [
+        {
+          "key": "A",
+          "text": "从最近安全恢复点继续"
+        },
+        {
+          "key": "B",
+          "text": "无条件从第 1 步重跑"
+        },
+        {
+          "key": "C",
+          "text": "删除所有产物"
+        },
+        {
+          "key": "D",
+          "text": "让用户重新输入全部信息"
+        }
+      ],
+      "answer": "A",
+      "explanation_correct": "恢复点能避免重复副作用和浪费。",
+      "explanation_wrong": "B可能导致重复执行；C/D体验差且不可靠。",
+      "extension": "恢复点要结合幂等和补偿设计。"
+    },
+    {
+      "id": 98,
+      "section": "第7章 Durable Execution",
+      "type": "single_choice",
+      "question": "Durable Execution 必须持久化什么？",
+      "options": [
+        {
+          "key": "A",
+          "text": "执行进度、成功步骤、失败步骤、副作用状态和等待状态"
+        },
+        {
+          "key": "B",
+          "text": "只持久化模型名称"
+        },
+        {
+          "key": "C",
+          "text": "只持久化页面颜色"
+        },
+        {
+          "key": "D",
+          "text": "无需持久化任何内容"
+        }
+      ],
+      "answer": "A",
+      "explanation_correct": "这些信息决定恢复时从哪里继续以及哪些动作不能重复。",
+      "explanation_wrong": "B/C/D不足。",
+      "extension": "持久状态是恢复语义的基础。"
+    },
+    {
+      "id": 99,
+      "section": "第7章 Durable Execution",
+      "type": "single_choice",
+      "question": "人工审批节点为什么适合放在 Workflow 中？",
+      "options": [
+        {
+          "key": "A",
+          "text": "审批是明确状态转移和等待点"
+        },
+        {
+          "key": "B",
+          "text": "审批能提高模型参数"
+        },
+        {
+          "key": "C",
+          "text": "审批不需要记录"
+        },
+        {
+          "key": "D",
+          "text": "审批必须由模型自动通过"
+        }
+      ],
+      "answer": "A",
+      "explanation_correct": "Workflow 能清晰表达 waiting_for_approval 等状态。",
+      "explanation_wrong": "B/C/D错误。",
+      "extension": "审批节点应记录审批人、时间、输入和结果。"
+    },
+    {
+      "id": 100,
+      "section": "第7章 Durable Execution",
+      "type": "single_choice",
+      "question": "Workflow 中的分支判断应该如何设计？",
+      "options": [
+        {
+          "key": "A",
+          "text": "可观测、可回放、可解释"
+        },
+        {
+          "key": "B",
+          "text": "完全隐藏，不记录条件"
+        },
+        {
+          "key": "C",
+          "text": "只靠模型口头保证"
+        },
+        {
+          "key": "D",
+          "text": "每次随机选择"
+        }
+      ],
+      "answer": "A",
+      "explanation_correct": "分支影响执行路径，必须能复盘。",
+      "explanation_wrong": "B/C/D都会导致排障困难。",
+      "extension": "模型参与判断时，也应记录输入、输出和置信依据。"
+    },
+    {
+      "id": 101,
+      "section": "第7章 Durable Execution",
+      "type": "single_choice",
+      "question": "长任务中等待外部系统返回时，正确做法是？",
+      "options": [
+        {
+          "key": "A",
+          "text": "保存等待状态并异步恢复"
+        },
+        {
+          "key": "B",
+          "text": "一直阻塞前端请求"
+        },
+        {
+          "key": "C",
+          "text": "丢弃 task_id"
+        },
+        {
+          "key": "D",
+          "text": "从头轮询所有历史"
+        }
+      ],
+      "answer": "A",
+      "explanation_correct": "等待状态持久化后可异步继续。",
+      "explanation_wrong": "B容易超时；C无法恢复；D低效。",
+      "extension": "等待外部事件是 Durable Execution 的典型场景。"
+    },
+    {
+      "id": 102,
+      "section": "第7章 Durable Execution",
+      "type": "single_choice",
+      "question": "如果任务中存在副作用，恢复时最需要避免什么？",
+      "options": [
+        {
+          "key": "A",
+          "text": "重复执行已成功的副作用动作"
+        },
+        {
+          "key": "B",
+          "text": "读取状态"
+        },
+        {
+          "key": "C",
+          "text": "记录日志"
+        },
+        {
+          "key": "D",
+          "text": "检查幂等键"
+        }
+      ],
+      "answer": "A",
+      "explanation_correct": "重复副作用可能造成真实业务损失。",
+      "explanation_wrong": "B/C/D都是必要操作。",
+      "extension": "恢复逻辑应能识别哪些步骤已生效。"
+    },
+    {
+      "id": 103,
+      "section": "第7章 Durable Execution",
+      "type": "single_choice",
+      "question": "Workflow 与状态存储的关系是什么？",
+      "options": [
+        {
+          "key": "A",
+          "text": "Workflow 的可靠执行依赖状态持久化"
+        },
+        {
+          "key": "B",
+          "text": "Workflow 不需要状态"
+        },
+        {
+          "key": "C",
+          "text": "状态只能存在模型上下文"
+        },
+        {
+          "key": "D",
+          "text": "状态存储只用于图片"
+        }
+      ],
+      "answer": "A",
+      "explanation_correct": "没有状态持久化，崩溃后很难恢复。",
+      "explanation_wrong": "B/C/D错误。",
+      "extension": "状态存储和 Workflow 引擎通常紧密配合。"
+    },
+    {
+      "id": 104,
+      "section": "第7章 Durable Execution",
+      "type": "single_choice",
+      "question": "哪个任务最需要 Durable Execution？",
+      "options": [
+        {
+          "key": "A",
+          "text": "跨多系统、需审批、可能运行数小时的退款流程"
+        },
+        {
+          "key": "B",
+          "text": "1+1 计算"
+        },
+        {
+          "key": "C",
+          "text": "单句翻译"
+        },
+        {
+          "key": "D",
+          "text": "一次只读字典查询"
+        }
+      ],
+      "answer": "A",
+      "explanation_correct": "长流程、多副作用、异步等待最需要持久执行。",
+      "explanation_wrong": "B/C/D通常不需要复杂恢复机制。",
+      "extension": "Durable Execution 的收益随任务复杂度增加而增加。"
+    },
+    {
+      "id": 105,
+      "section": "第7章 Durable Execution",
+      "type": "single_choice",
+      "question": "为什么不能只靠 Prompt 保证流程正确性？",
+      "options": [
+        {
+          "key": "A",
+          "text": "Prompt 无法提供持久状态、审批、幂等和恢复语义"
+        },
+        {
+          "key": "B",
+          "text": "Prompt 不能包含中文"
+        },
+        {
+          "key": "C",
+          "text": "Prompt 会关闭数据库"
+        },
+        {
+          "key": "D",
+          "text": "Prompt 一定比 Workflow 慢"
+        }
+      ],
+      "answer": "A",
+      "explanation_correct": "流程可靠性需要工程机制，而不是只靠模型遵守指令。",
+      "explanation_wrong": "B/C/D错误。",
+      "extension": "Prompt 约束和 Workflow 约束是不同层面的能力。"
+    },
+    {
+      "id": 106,
+      "section": "第8章 可靠性",
+      "type": "single_choice",
+      "question": "幂等的定义是什么？",
+      "options": [
+        {
+          "key": "A",
+          "text": "操作执行一次和多次，对最终状态影响相同"
+        },
+        {
+          "key": "B",
+          "text": "操作永远不会失败"
+        },
+        {
+          "key": "C",
+          "text": "操作不能有参数"
+        },
+        {
+          "key": "D",
+          "text": "操作必须异步"
+        }
+      ],
+      "answer": "A",
+      "explanation_correct": "幂等关注重复执行的最终效果一致。",
+      "explanation_wrong": "B/C/D不是幂等定义。",
+      "extension": "幂等是重试和恢复的前提。"
+    },
+    {
+      "id": 107,
+      "section": "第8章 可靠性",
+      "type": "single_choice",
+      "question": "实现幂等的常见方式不包括哪项？",
+      "options": [
+        {
+          "key": "A",
+          "text": "幂等键"
+        },
+        {
+          "key": "B",
+          "text": "唯一约束"
+        },
+        {
+          "key": "C",
+          "text": "状态机校验"
+        },
+        {
+          "key": "D",
+          "text": "随机重复创建资源"
+        }
+      ],
+      "answer": "D",
+      "explanation_correct": "随机重复创建资源正是幂等要避免的。",
+      "explanation_wrong": "A/B/C都是常见幂等设计。",
+      "extension": "外部业务单号也常用于幂等去重。"
+    },
+    {
+      "id": 108,
+      "section": "第8章 可靠性",
+      "type": "single_choice",
+      "question": "哪类错误适合自动重试？",
+      "options": [
+        {
+          "key": "A",
+          "text": "网络抖动、短时超时、临时 5xx"
+        },
+        {
+          "key": "B",
+          "text": "权限不足"
+        },
+        {
+          "key": "C",
+          "text": "参数非法"
+        },
+        {
+          "key": "D",
+          "text": "余额不足"
+        }
+      ],
+      "answer": "A",
+      "explanation_correct": "瞬时故障有自愈可能，适合有限重试。",
+      "explanation_wrong": "B/C/D属于业务或权限错误，重试通常无效。",
+      "extension": "重试策略应区分错误类型。"
+    },
+    {
+      "id": 109,
+      "section": "第8章 可靠性",
+      "type": "single_choice",
+      "question": "哪类错误不适合自动重试？",
+      "options": [
+        {
+          "key": "A",
+          "text": "参数非法"
+        },
+        {
+          "key": "B",
+          "text": "短时网络抖动"
+        },
+        {
+          "key": "C",
+          "text": "临时限流"
+        },
+        {
+          "key": "D",
+          "text": "下游短暂 5xx"
+        }
+      ],
+      "answer": "A",
+      "explanation_correct": "参数非法不会因为重试变合法。",
+      "explanation_wrong": "B/C/D在设置退避和上限后可重试。",
+      "extension": "业务错误反复重试只会制造噪声和风险。"
+    },
+    {
+      "id": 110,
+      "section": "第8章 可靠性",
+      "type": "single_choice",
+      "question": "回滚和补偿的主要区别是什么？",
+      "options": [
+        {
+          "key": "A",
+          "text": "回滚直接恢复原状态，补偿执行语义上的反向动作"
+        },
+        {
+          "key": "B",
+          "text": "补偿只能用于只读查询"
+        },
+        {
+          "key": "C",
+          "text": "回滚就是重试"
+        },
+        {
+          "key": "D",
+          "text": "二者都不需要记录"
+        }
+      ],
+      "answer": "A",
+      "explanation_correct": "外部副作用常不能严格回滚，只能补偿。",
+      "explanation_wrong": "B/C/D错误。",
+      "extension": "Agent 调外部服务时，补偿比数据库事务回滚更现实。"
+    },
+    {
+      "id": 111,
+      "section": "第8章 可靠性",
+      "type": "single_choice",
+      "question": "邮件发错后的补偿方式更可能是什么？",
+      "options": [
+        {
+          "key": "A",
+          "text": "发送更正通知"
+        },
+        {
+          "key": "B",
+          "text": "从对方邮箱物理删除邮件"
+        },
+        {
+          "key": "C",
+          "text": "假装没有发生"
+        },
+        {
+          "key": "D",
+          "text": "重复发送同一封错误邮件"
+        }
+      ],
+      "answer": "A",
+      "explanation_correct": "邮件发出后通常无法真正撤回，只能语义补偿。",
+      "explanation_wrong": "B通常不可行；C/D错误。",
+      "extension": "补偿关注把业务恢复到可接受状态。"
+    },
+    {
+      "id": 112,
+      "section": "第8章 可靠性",
+      "type": "single_choice",
+      "question": "重复扣款后的常见补偿是什么？",
+      "options": [
+        {
+          "key": "A",
+          "text": "发起退款"
+        },
+        {
+          "key": "B",
+          "text": "再次扣款"
+        },
+        {
+          "key": "C",
+          "text": "删除审计日志"
+        },
+        {
+          "key": "D",
+          "text": "关闭所有工具"
+        }
+      ],
+      "answer": "A",
+      "explanation_correct": "退款是对扣款副作用的语义反向动作。",
+      "explanation_wrong": "B加重错误；C违法合规；D不是补偿。",
+      "extension": "补偿动作本身也需要幂等和审计。"
+    },
+    {
+      "id": 113,
+      "section": "第9章 异步任务",
+      "type": "single_choice",
+      "question": "Agent 长任务为什么适合异步执行？",
+      "options": [
+        {
+          "key": "A",
+          "text": "任务多步、耗时、可能等待外部系统或人工输入"
+        },
+        {
+          "key": "B",
+          "text": "因为异步一定更准确"
+        },
+        {
+          "key": "C",
+          "text": "因为同步不能返回文本"
+        },
+        {
+          "key": "D",
+          "text": "因为异步不需要状态"
+        }
+      ],
+      "answer": "A",
+      "explanation_correct": "复杂 Agent 任务常超过一次请求响应的时间边界。",
+      "explanation_wrong": "B过于绝对；C/D错误。",
+      "extension": "异步通常要配合状态存储和进度通知。"
+    },
+    {
+      "id": 114,
+      "section": "第9章 异步任务",
+      "type": "single_choice",
+      "question": "异步和流式的区别是什么？",
+      "options": [
+        {
+          "key": "A",
+          "text": "异步是执行方式，流式是反馈方式"
+        },
+        {
+          "key": "B",
+          "text": "异步是反馈方式，流式是数据库"
+        },
+        {
+          "key": "C",
+          "text": "二者完全相同"
+        },
+        {
+          "key": "D",
+          "text": "流式只能用于图片"
+        }
+      ],
+      "answer": "A",
+      "explanation_correct": "异步让任务后台执行，流式让用户看到过程。",
+      "explanation_wrong": "B/C/D错误。",
+      "extension": "二者组合能兼顾可靠性和体验。"
+    },
+    {
+      "id": 115,
+      "section": "第9章 异步任务",
+      "type": "single_choice",
+      "question": "流式输出的主要价值是什么？",
+      "options": [
+        {
+          "key": "A",
+          "text": "实时反馈阶段性进度和中间结果"
+        },
+        {
+          "key": "B",
+          "text": "删除任务状态"
+        },
+        {
+          "key": "C",
+          "text": "禁止用户查看结果"
+        },
+        {
+          "key": "D",
+          "text": "替代所有审计"
+        }
+      ],
+      "answer": "A",
+      "explanation_correct": "长任务中，流式反馈可以降低用户等待焦虑。",
+      "explanation_wrong": "B/C/D错误。",
+      "extension": "流式内容也要注意不要泄漏敏感信息。"
+    },
+    {
+      "id": 116,
+      "section": "第9章 异步任务",
+      "type": "single_choice",
+      "question": "Cancel 设计为什么不能简单杀进程？",
+      "options": [
+        {
+          "key": "A",
+          "text": "可能留下不一致状态或中断在副作用中间"
+        },
+        {
+          "key": "B",
+          "text": "因为进程不能停止"
+        },
+        {
+          "key": "C",
+          "text": "因为取消不需要状态"
+        },
+        {
+          "key": "D",
+          "text": "因为杀进程能自动补偿"
+        }
+      ],
+      "answer": "A",
+      "explanation_correct": "取消需要停在安全边界并保存状态。",
+      "explanation_wrong": "B/C/D错误。",
+      "extension": "取消通常是状态转移，而不是粗暴终止。"
+    },
+    {
+      "id": 117,
+      "section": "第9章 异步任务",
+      "type": "single_choice",
+      "question": "Resume 设计为什么不能简单重发请求？",
+      "options": [
+        {
+          "key": "A",
+          "text": "可能重复执行已完成步骤或副作用"
+        },
+        {
+          "key": "B",
+          "text": "因为请求不能重复发送"
+        },
+        {
+          "key": "C",
+          "text": "因为恢复不需要 task_id"
+        },
+        {
+          "key": "D",
+          "text": "因为所有任务都无状态"
+        }
+      ],
+      "answer": "A",
+      "explanation_correct": "恢复应从最近有效状态继续。",
+      "explanation_wrong": "B/C/D错误。",
+      "extension": "Resume 依赖 task_id、步骤状态和幂等信息。"
+    },
+    {
+      "id": 118,
+      "section": "第9章 异步任务",
+      "type": "single_choice",
+      "question": "任务取消时合理的状态变化是什么？",
+      "options": [
+        {
+          "key": "A",
+          "text": "标记为 cancelling/cancelled，并在安全点停止"
+        },
+        {
+          "key": "B",
+          "text": "立即删除所有审计"
+        },
+        {
+          "key": "C",
+          "text": "强制重跑所有步骤"
+        },
+        {
+          "key": "D",
+          "text": "把状态改成 success"
+        }
+      ],
+      "answer": "A",
+      "explanation_correct": "状态化取消可保留上下文并避免不一致。",
+      "explanation_wrong": "B/C/D错误。",
+      "extension": "取消也应记录操作者和时间。"
+    },
+    {
+      "id": 119,
+      "section": "第9章 异步任务",
+      "type": "single_choice",
+      "question": "长任务中 task_id 的作用是什么？",
+      "options": [
+        {
+          "key": "A",
+          "text": "关联状态、进度、产物和恢复操作"
+        },
+        {
+          "key": "B",
+          "text": "作为随机装饰"
+        },
+        {
+          "key": "C",
+          "text": "替代所有权限"
+        },
+        {
+          "key": "D",
+          "text": "只给前端显示"
+        }
+      ],
+      "answer": "A",
+      "explanation_correct": "task_id 是异步任务跟踪和恢复的核心标识。",
+      "explanation_wrong": "B/C/D不完整或错误。",
+      "extension": "task_id 通常还会出现在审计和 Artifact 关联中。"
+    },
+    {
+      "id": 120,
+      "section": "第9章 异步任务",
+      "type": "single_choice",
+      "question": "异步任务的前端体验通常如何优化？",
+      "options": [
+        {
+          "key": "A",
+          "text": "用流式进度、中间产物和明确状态反馈"
+        },
+        {
+          "key": "B",
+          "text": "让用户一直空白等待"
+        },
+        {
+          "key": "C",
+          "text": "永远不显示失败"
+        },
+        {
+          "key": "D",
+          "text": "隐藏审批等待"
+        }
+      ],
+      "answer": "A",
+      "explanation_correct": "用户需要知道任务在做什么、卡在哪里、是否需要自己操作。",
+      "explanation_wrong": "B/C/D体验和可解释性差。",
+      "extension": "阶段性输出是复杂 Agent 产品的重要交互设计。"
+    },
+    {
+      "id": 121,
+      "section": "第10章 Agent Runtime",
+      "type": "single_choice",
+      "question": "Agent Runtime 不只是工作流引擎，因为它还要处理什么？",
+      "options": [
+        {
+          "key": "A",
+          "text": "模型不确定性、工具循环、上下文、模型路由、权限治理"
+        },
+        {
+          "key": "B",
+          "text": "只处理网页颜色"
+        },
+        {
+          "key": "C",
+          "text": "只训练模型"
+        },
+        {
+          "key": "D",
+          "text": "只存图片"
+        }
+      ],
+      "answer": "A",
+      "explanation_correct": "Runtime 覆盖模型、能力、执行、状态和治理。",
+      "explanation_wrong": "B/C/D都过窄。",
+      "extension": "工作流是 Runtime 的一部分或依赖，不等于全部 Runtime。"
+    },
+    {
+      "id": 122,
+      "section": "第10章 Agent Runtime",
+      "type": "single_choice",
+      "question": "编排核心主要负责什么？",
+      "options": [
+        {
+          "key": "A",
+          "text": "推进任务流程、管理工具循环、控制状态转移"
+        },
+        {
+          "key": "B",
+          "text": "保存大文件"
+        },
+        {
+          "key": "C",
+          "text": "训练 tokenizer"
+        },
+        {
+          "key": "D",
+          "text": "调整显示器"
+        }
+      ],
+      "answer": "A",
+      "explanation_correct": "编排核心是运行时推进 Agent 执行的中心。",
+      "explanation_wrong": "B是产物存储；C/D无关。",
+      "extension": "编排核心通常要和状态存储配合。"
+    },
+    {
+      "id": 123,
+      "section": "第10章 Agent Runtime",
+      "type": "single_choice",
+      "question": "状态存储主要保存什么？",
+      "options": [
+        {
+          "key": "A",
+          "text": "会话、任务、执行进度、等待状态和恢复点"
+        },
+        {
+          "key": "B",
+          "text": "工具文档封面图"
+        },
+        {
+          "key": "C",
+          "text": "显卡温度曲线"
+        },
+        {
+          "key": "D",
+          "text": "网页 CSS"
+        }
+      ],
+      "answer": "A",
+      "explanation_correct": "状态存储支撑连续对话和 Durable Execution。",
+      "explanation_wrong": "B/C/D不属于核心状态。",
+      "extension": "状态存储需要高可靠和明确租户隔离。"
+    },
+    {
+      "id": 124,
+      "section": "第10章 Agent Runtime",
+      "type": "single_choice",
+      "question": "能力注册中心主要管理什么？",
+      "options": [
+        {
+          "key": "A",
+          "text": "工具、资源、Skill、Agent 的注册、发现、授权和版本"
+        },
+        {
+          "key": "B",
+          "text": "用户鼠标"
+        },
+        {
+          "key": "C",
+          "text": "显卡驱动"
+        },
+        {
+          "key": "D",
+          "text": "浏览器历史"
+        }
+      ],
+      "answer": "A",
+      "explanation_correct": "能力注册中心是工具和能力生态的元数据中枢。",
+      "explanation_wrong": "B/C/D无关。",
+      "extension": "没有注册中心，大规模工具发现和权限很难治理。"
+    },
+    {
+      "id": 125,
+      "section": "第10章 Agent Runtime",
+      "type": "single_choice",
+      "question": "模型路由层的职责是什么？",
+      "options": [
+        {
+          "key": "A",
+          "text": "模型选择、限流、降级、负载均衡和成本控制"
+        },
+        {
+          "key": "B",
+          "text": "创建数据库表结构"
+        },
+        {
+          "key": "C",
+          "text": "替代所有工具"
+        },
+        {
+          "key": "D",
+          "text": "手动画图"
+        }
+      ],
+      "answer": "A",
+      "explanation_correct": "模型路由决定用哪个模型、如何兜底和控制成本。",
+      "explanation_wrong": "B/C/D不属于模型路由。",
+      "extension": "不同任务可以路由到不同能力和成本的模型。"
+    },
+    {
+      "id": 126,
+      "section": "第10章 Agent Runtime",
+      "type": "single_choice",
+      "question": "执行器/隔离层的职责是什么？",
+      "options": [
+        {
+          "key": "A",
+          "text": "调用外部系统并隔离模型与内部高权限能力"
+        },
+        {
+          "key": "B",
+          "text": "让模型保存所有密钥"
+        },
+        {
+          "key": "C",
+          "text": "隐藏所有日志"
+        },
+        {
+          "key": "D",
+          "text": "关闭权限"
+        }
+      ],
+      "answer": "A",
+      "explanation_correct": "执行器是实际工具调用和安全边界。",
+      "explanation_wrong": "B/C/D危险。",
+      "extension": "执行器通常和网关、沙箱、代理等机制结合。"
+    },
+    {
+      "id": 127,
+      "section": "第10章 Agent Runtime",
+      "type": "single_choice",
+      "question": "调度与恢复层主要负责什么？",
+      "options": [
+        {
+          "key": "A",
+          "text": "异步任务、重试、持久执行、断点续跑、超时处理"
+        },
+        {
+          "key": "B",
+          "text": "网页排版"
+        },
+        {
+          "key": "C",
+          "text": "替换用户头像"
+        },
+        {
+          "key": "D",
+          "text": "训练数据清洗"
+        }
+      ],
+      "answer": "A",
+      "explanation_correct": "这层保障任务能可靠完成或可恢复。",
+      "explanation_wrong": "B/C/D不属于调度恢复。",
+      "extension": "调度层需要识别可重试与不可重试错误。"
+    },
+    {
+      "id": 128,
+      "section": "第10章 Agent Runtime",
+      "type": "single_choice",
+      "question": "产物管理层主要管理什么？",
+      "options": [
+        {
+          "key": "A",
+          "text": "报告、代码、文件、表格等 Artifact 的存储、版本和权限"
+        },
+        {
+          "key": "B",
+          "text": "临时屏幕亮度"
+        },
+        {
+          "key": "C",
+          "text": "模型梯度"
+        },
+        {
+          "key": "D",
+          "text": "键盘布局"
+        }
+      ],
+      "answer": "A",
+      "explanation_correct": "Artifact 是复杂任务的重要输出，需要独立治理。",
+      "explanation_wrong": "B/C/D不相关。",
+      "extension": "产物权限不应弱于原始数据权限。"
+    },
+    {
+      "id": 129,
+      "section": "第10章 Agent Runtime",
+      "type": "single_choice",
+      "question": "控制面主要负责什么？",
+      "options": [
+        {
+          "key": "A",
+          "text": "策略、权限、审批、路由、版本、灰度"
+        },
+        {
+          "key": "B",
+          "text": "实际工具执行"
+        },
+        {
+          "key": "C",
+          "text": "文件二进制存储"
+        },
+        {
+          "key": "D",
+          "text": "模型矩阵乘法"
+        }
+      ],
+      "answer": "A",
+      "explanation_correct": "控制面管理规则和决策。",
+      "explanation_wrong": "B更偏数据面；C是存储；D是推理底层。",
+      "extension": "控制面变化不应要求重写所有执行逻辑。"
+    },
+    {
+      "id": 130,
+      "section": "第10章 Agent Runtime",
+      "type": "single_choice",
+      "question": "数据面主要负责什么？",
+      "options": [
+        {
+          "key": "A",
+          "text": "上下文装配、模型调用、工具执行、产物读写"
+        },
+        {
+          "key": "B",
+          "text": "审批策略制定"
+        },
+        {
+          "key": "C",
+          "text": "权限规则定义"
+        },
+        {
+          "key": "D",
+          "text": "灰度配置"
+        }
+      ],
+      "answer": "A",
+      "explanation_correct": "数据面负责真实运行路径。",
+      "explanation_wrong": "B/C/D更偏控制面。",
+      "extension": "控制面和数据面分离有助于扩展和审计。"
+    },
+    {
+      "id": 131,
+      "section": "第10章 Agent Runtime",
+      "type": "single_choice",
+      "question": "为什么能力注册、状态存储、产物存储要分开？",
+      "options": [
+        {
+          "key": "A",
+          "text": "三者数据形态、读写模式和治理目标不同"
+        },
+        {
+          "key": "B",
+          "text": "为了让系统更难维护"
+        },
+        {
+          "key": "C",
+          "text": "因为数据库不能存文本"
+        },
+        {
+          "key": "D",
+          "text": "因为产物不能加权限"
+        }
+      ],
+      "answer": "A",
+      "explanation_correct": "混在一起短期简单，长期治理困难。",
+      "explanation_wrong": "B/C/D错误。",
+      "extension": "分离存储有助于性能优化、权限隔离和生命周期管理。"
+    },
+    {
+      "id": 132,
+      "section": "第12章 统一治理",
+      "type": "single_choice",
+      "question": "多租户 Runtime 最危险的问题是什么？",
+      "options": [
+        {
+          "key": "A",
+          "text": "串租户状态、权限、缓存或凭据"
+        },
+        {
+          "key": "B",
+          "text": "模型输出太短"
+        },
+        {
+          "key": "C",
+          "text": "工具名太清晰"
+        },
+        {
+          "key": "D",
+          "text": "日志过于完整"
+        }
+      ],
+      "answer": "A",
+      "explanation_correct": "跨租户泄漏是企业级 Agent 的高危事故。",
+      "explanation_wrong": "B/C/D不是核心风险。",
+      "extension": "所有对象都应 tenant-aware。"
+    },
+    {
+      "id": 133,
+      "section": "第12章 统一治理",
+      "type": "single_choice",
+      "question": "哪些对象应该 tenant-aware？",
+      "options": [
+        {
+          "key": "A",
+          "text": "会话、任务、记忆、工具、凭据、缓存、Artifact、审计日志"
+        },
+        {
+          "key": "B",
+          "text": "只有最终答案"
+        },
+        {
+          "key": "C",
+          "text": "只有前端按钮"
+        },
+        {
+          "key": "D",
+          "text": "只有模型名称"
+        }
+      ],
+      "answer": "A",
+      "explanation_correct": "多租户隔离要覆盖运行链路所有对象。",
+      "explanation_wrong": "B/C/D范围过窄。",
+      "extension": "缓存和凭据尤其容易被忽略。"
+    },
+    {
+      "id": 134,
+      "section": "第12章 统一治理",
+      "type": "single_choice",
+      "question": "审计 Trace 中为什么要记录模型为什么选择工具？",
+      "options": [
+        {
+          "key": "A",
+          "text": "便于排查误调用、路由错误和安全事故"
+        },
+        {
+          "key": "B",
+          "text": "为了让日志更花哨"
+        },
+        {
+          "key": "C",
+          "text": "为了替代权限"
+        },
+        {
+          "key": "D",
+          "text": "为了隐藏工具结果"
+        }
+      ],
+      "answer": "A",
+      "explanation_correct": "选择原因是理解 Agent 决策链的重要信息。",
+      "explanation_wrong": "B/C/D错误。",
+      "extension": "Trace 不只记录结果，也要记录决策过程和中间状态。"
+    },
+    {
+      "id": 135,
+      "section": "第12章 统一治理",
+      "type": "single_choice",
+      "question": "限流和配额在 Agent Runtime 中的作用是什么？",
+      "options": [
+        {
+          "key": "A",
+          "text": "控制成本、防止滥用、保护下游服务"
+        },
+        {
+          "key": "B",
+          "text": "让所有请求失败"
+        },
+        {
+          "key": "C",
+          "text": "替代 Schema"
+        },
+        {
+          "key": "D",
+          "text": "删除工具"
+        }
+      ],
+      "answer": "A",
+      "explanation_correct": "Agent 可能自动发起多轮调用，限流配额非常重要。",
+      "explanation_wrong": "B/C/D错误。",
+      "extension": "限流应按用户、租户、工具和模型等维度设计。"
+    },
+    {
+      "id": 136,
+      "section": "第11章 Skills",
+      "type": "single_choice",
+      "question": "Tool 和 Skill 的核心区别是什么？",
+      "options": [
+        {
+          "key": "A",
+          "text": "Tool 是原子动作，Skill 是任务方法封装"
+        },
+        {
+          "key": "B",
+          "text": "Tool 只能写文档，Skill 只能查天气"
+        },
+        {
+          "key": "C",
+          "text": "二者完全一样"
+        },
+        {
+          "key": "D",
+          "text": "Skill 不能版本化"
+        }
+      ],
+      "answer": "A",
+      "explanation_correct": "Tool 解决能做什么，Skill 解决该怎么做。",
+      "explanation_wrong": "B/C/D错误。",
+      "extension": "Skill 通常包含说明、示例、约束、脚本和评测。"
+    },
+    {
+      "id": 137,
+      "section": "第11章 Skills",
+      "type": "single_choice",
+      "question": "为什么 Agent 系统需要 Skill？",
+      "options": [
+        {
+          "key": "A",
+          "text": "把稳定任务经验资产化、复用化、可评测化"
+        },
+        {
+          "key": "B",
+          "text": "为了替代所有工具"
+        },
+        {
+          "key": "C",
+          "text": "为了取消权限"
+        },
+        {
+          "key": "D",
+          "text": "为了让 Prompt 永远更长"
+        }
+      ],
+      "answer": "A",
+      "explanation_correct": "Skill 把方法论沉淀为平台能力资产。",
+      "explanation_wrong": "B/C/D错误。",
+      "extension": "好的 Skill 能提升一致性并降低重复设计成本。"
+    },
+    {
+      "id": 138,
+      "section": "第11章 Skills",
+      "type": "single_choice",
+      "question": "下面哪个更像 Skill？",
+      "options": [
+        {
+          "key": "A",
+          "text": "论文格式检查的一整套流程、提示、示例和标准"
+        },
+        {
+          "key": "B",
+          "text": "一个读取文件 API"
+        },
+        {
+          "key": "C",
+          "text": "一个加法函数"
+        },
+        {
+          "key": "D",
+          "text": "一次 HTTP ping"
+        }
+      ],
+      "answer": "A",
+      "explanation_correct": "它封装的是任务方法而非单个动作。",
+      "explanation_wrong": "B/C/D更像 Tool 或基础接口。",
+      "extension": "复杂任务通常需要 Skill + Tool 组合。"
+    },
+    {
+      "id": 139,
+      "section": "第11章 Skills",
+      "type": "single_choice",
+      "question": "Skill 与 MCP、A2A 的关系是什么？",
+      "options": [
+        {
+          "key": "A",
+          "text": "MCP/A2A 是协议层，Skill 是能力使用方法包"
+        },
+        {
+          "key": "B",
+          "text": "Skill 是显卡协议"
+        },
+        {
+          "key": "C",
+          "text": "MCP 是 Skill 的同义词"
+        },
+        {
+          "key": "D",
+          "text": "A2A 只能调用 Skill 不能调用 Agent"
+        }
+      ],
+      "answer": "A",
+      "explanation_correct": "Skill 构建在工具、资源、Agent 和 Prompt 之上。",
+      "explanation_wrong": "B/C/D错误。",
+      "extension": "Skill 不是协议，而是能力资产形态。"
+    },
+    {
+      "id": 140,
+      "section": "第11章 Skills",
+      "type": "single_choice",
+      "question": "Progressive Disclosure 在 Skill 中指什么？",
+      "options": [
+        {
+          "key": "A",
+          "text": "先加载元数据，相关时再加载完整 Skill 内容"
+        },
+        {
+          "key": "B",
+          "text": "每次加载所有 Skill 全文"
+        },
+        {
+          "key": "C",
+          "text": "永远不加载 Skill"
+        },
+        {
+          "key": "D",
+          "text": "随机删除 Skill"
+        }
+      ],
+      "answer": "A",
+      "explanation_correct": "渐进式暴露减少上下文污染和成本。",
+      "explanation_wrong": "B正是要避免的；C/D错误。",
+      "extension": "工具和 Skill 都可以采用这种按需加载思想。"
+    },
+    {
+      "id": 141,
+      "section": "第11章 Skills",
+      "type": "single_choice",
+      "question": "Skill 数量多时，全量塞入上下文会带来什么问题？",
+      "options": [
+        {
+          "key": "A",
+          "text": "Token 成本上升、注意力污染、选择质量下降"
+        },
+        {
+          "key": "B",
+          "text": "权限天然增强"
+        },
+        {
+          "key": "C",
+          "text": "模型永远更准"
+        },
+        {
+          "key": "D",
+          "text": "系统不需要评测"
+        }
+      ],
+      "answer": "A",
+      "explanation_correct": "过多 Skill 会增加噪声和成本。",
+      "explanation_wrong": "B/C/D错误。",
+      "extension": "Skill 路由和检索是规模化后的必要能力。"
+    },
+    {
+      "id": 142,
+      "section": "第11章 Skills",
+      "type": "single_choice",
+      "question": "Skill 为什么需要版本管理？",
+      "options": [
+        {
+          "key": "A",
+          "text": "便于评测、回滚、灰度和变更追踪"
+        },
+        {
+          "key": "B",
+          "text": "为了每天随机变化"
+        },
+        {
+          "key": "C",
+          "text": "为了禁止复用"
+        },
+        {
+          "key": "D",
+          "text": "为了取消安全审查"
+        }
+      ],
+      "answer": "A",
+      "explanation_correct": "Skill 影响任务行为，变更必须可控。",
+      "explanation_wrong": "B/C/D错误。",
+      "extension": "Skill 的版本变更也应该进入回归测试。"
+    },
+    {
+      "id": 143,
+      "section": "第11章 Skills",
+      "type": "single_choice",
+      "question": "Skill 评测主要回答什么问题？",
+      "options": [
+        {
+          "key": "A",
+          "text": "它是否提升成功率、降低成本、提高一致性或降低风险"
+        },
+        {
+          "key": "B",
+          "text": "它是否名字最长"
+        },
+        {
+          "key": "C",
+          "text": "它是否包含最多废话"
+        },
+        {
+          "key": "D",
+          "text": "它是否完全不需要工具"
+        }
+      ],
+      "answer": "A",
+      "explanation_correct": "Skill 是能力资产，必须用效果衡量。",
+      "explanation_wrong": "B/C/D不是评测目标。",
+      "extension": "不合格 Skill 应回滚、下线或重写。"
+    },
+    {
+      "id": 144,
+      "section": "第11章 Skills",
+      "type": "single_choice",
+      "question": "Skill 的安全风险不包括哪项？",
+      "options": [
+        {
+          "key": "A",
+          "text": "隐式权限放大"
+        },
+        {
+          "key": "B",
+          "text": "知识过时"
+        },
+        {
+          "key": "C",
+          "text": "注入和供应链风险"
+        },
+        {
+          "key": "D",
+          "text": "必然提升所有任务准确率"
+        }
+      ],
+      "answer": "D",
+      "explanation_correct": "Skill 不一定提升效果，且可能引入风险。",
+      "explanation_wrong": "A/B/C都是真实风险。",
+      "extension": "Skill 也要遵循最小依赖和安全审查。"
+    },
+    {
+      "id": 145,
+      "section": "第11章 Skills",
+      "type": "single_choice",
+      "question": "一个好的 Skill 最不应该是什么？",
+      "options": [
+        {
+          "key": "A",
+          "text": "不可评测、不可版本化、散落在一次性 Prompt 里的经验"
+        },
+        {
+          "key": "B",
+          "text": "有适用边界"
+        },
+        {
+          "key": "C",
+          "text": "有示例"
+        },
+        {
+          "key": "D",
+          "text": "有回滚机制"
+        }
+      ],
+      "answer": "A",
+      "explanation_correct": "这种 Skill 无法平台化治理。",
+      "explanation_wrong": "B/C/D都是好的 Skill 设计要素。",
+      "extension": "Skill 的目标是资产化，而不是把 Prompt 写得更长。"
+    },
+    {
+      "id": 146,
+      "section": "第13章 综合案例",
+      "type": "single_choice",
+      "question": "退款处理 Agent 中，查询客户和扣款记录属于什么工具类型？",
+      "options": [
+        {
+          "key": "A",
+          "text": "只读工具"
+        },
+        {
+          "key": "B",
+          "text": "高风险副作用工具"
+        },
+        {
+          "key": "C",
+          "text": "补偿动作"
+        },
+        {
+          "key": "D",
+          "text": "人工审批"
+        }
+      ],
+      "answer": "A",
+      "explanation_correct": "查询不改变外部业务状态，可以作为只读工具处理。",
+      "explanation_wrong": "B/C/D不符合查询动作语义。",
+      "extension": "只读查询通常可以并行，但仍要遵循权限。"
+    },
+    {
+      "id": 147,
+      "section": "第13章 综合案例",
+      "type": "single_choice",
+      "question": "退款处理 Agent 中，创建退款工单属于什么？",
+      "options": [
+        {
+          "key": "A",
+          "text": "副作用型工具调用"
+        },
+        {
+          "key": "B",
+          "text": "只读资源读取"
+        },
+        {
+          "key": "C",
+          "text": "普通文本摘要"
+        },
+        {
+          "key": "D",
+          "text": "模型训练"
+        }
+      ],
+      "answer": "A",
+      "explanation_correct": "创建工单会改变外部系统状态，必须治理。",
+      "explanation_wrong": "B/C/D不符合。",
+      "extension": "副作用动作应做 Schema、权限、幂等和审计校验。"
+    },
+    {
+      "id": 148,
+      "section": "第13章 综合案例",
+      "type": "single_choice",
+      "question": "退款工单创建接口超时时，为什么不能盲目重试？",
+      "options": [
+        {
+          "key": "A",
+          "text": "可能重复创建工单，需要幂等键去重"
+        },
+        {
+          "key": "B",
+          "text": "因为超时一定表示成功"
+        },
+        {
+          "key": "C",
+          "text": "因为重试不需要状态"
+        },
+        {
+          "key": "D",
+          "text": "因为工具不能返回错误"
+        }
+      ],
+      "answer": "A",
+      "explanation_correct": "超时状态不明确，重复调用可能产生重复副作用。",
+      "explanation_wrong": "B过于绝对；C/D错误。",
+      "extension": "幂等键可用 customer_id + payment_id + reason 等组合生成。"
+    },
+    {
+      "id": 149,
+      "section": "第13章 综合案例",
+      "type": "single_choice",
+      "question": "退款金额较大时，模型最合理的行为是什么？",
+      "options": [
+        {
+          "key": "A",
+          "text": "生成审批材料和草稿，等待人工确认"
+        },
+        {
+          "key": "B",
+          "text": "直接退款并删除日志"
+        },
+        {
+          "key": "C",
+          "text": "反复调用扣款接口"
+        },
+        {
+          "key": "D",
+          "text": "忽略权限继续执行"
+        }
+      ],
+      "answer": "A",
+      "explanation_correct": "高风险金额应进入审批流，模型负责准备材料。",
+      "explanation_wrong": "B/C/D危险。",
+      "extension": "审批节点是 Workflow 和 Runtime 治理的结合点。"
+    },
+    {
+      "id": 150,
+      "section": "第13章 综合案例",
+      "type": "single_choice",
+      "question": "退款流程等待审批时系统重启，正确恢复依赖什么？",
+      "options": [
+        {
+          "key": "A",
+          "text": "Durable Execution 保存 task_id、阶段、证据、草稿和等待状态"
+        },
+        {
+          "key": "B",
+          "text": "让用户重新讲一遍所有内容"
+        },
+        {
+          "key": "C",
+          "text": "删除工单草稿"
+        },
+        {
+          "key": "D",
+          "text": "从头重复所有副作用"
+        }
+      ],
+      "answer": "A",
+      "explanation_correct": "持久执行可以从 waiting_for_approval 继续。",
+      "explanation_wrong": "B体验差；C丢失进度；D可能重复副作用。",
+      "extension": "这个案例串联了 Function Calling、Workflow、幂等、审批、状态和审计。"
+    }
+  ]
+}
