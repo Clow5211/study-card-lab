@@ -116,44 +116,6 @@ window.QUIZ_DATA = {
       ]
     },
     {
-      id: "ppo-notes",
-      title: "PPO 与 RL 算法扩展",
-      source: "agent-learning-docs/reinforcement-learning-algorithms/ppo_rl_algorithms_notes.md",
-      summary: [
-        "PPO 通常先用旧策略 rollout，再用新旧策略概率比和 advantage 做受约束更新。",
-        "clip 机制不是全局停止更新，而是限制样本继续朝过大风险方向变化。",
-        "DPO、GRPO、DAPO、OPD 等方法需要从是否在线采样、是否训练 critic、监督信号来源等角度区分。"
-      ],
-      questions: [
-        {
-          id: "q1",
-          type: "single",
-          prompt: "PPO 中 ratio 的核心含义是什么？",
-          options: [
-            { id: "A", text: "新策略与旧策略在同一动作上的概率比" },
-            { id: "B", text: "训练集和验证集的样本比" },
-            { id: "C", text: "prompt 长度和 response 长度的比例" },
-            { id: "D", text: "reward model 参数量和 actor 参数量的比例" }
-          ],
-          answer: "A",
-          explanation: "PPO 通过新旧策略概率比衡量当前更新相对 rollout 策略的偏移。"
-        },
-        {
-          id: "q2",
-          type: "single",
-          prompt: "关于 PPO clip，哪种理解更准确？",
-          options: [
-            { id: "A", text: "clip 后所有梯度都会消失" },
-            { id: "B", text: "clip 用于限制危险方向上的过大策略更新" },
-            { id: "C", text: "clip 只用于 value model，不影响 actor" },
-            { id: "D", text: "clip 等价于 KL 全分布精确计算" }
-          ],
-          answer: "B",
-          explanation: "clip 的目标是稳定策略更新，而不是简单地让所有越界样本停止学习。"
-        }
-      ]
-    },
-    {
       id: "credit-assignment",
       title: "Credit Assignment",
       source: "agent-learning-docs/reinforcement-learning-algorithms/Credit_Assignment.md",
