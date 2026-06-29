@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>AgenticRL Quiz</title>
+    <link rel="stylesheet" href="styles.css">
+  </head>
+  <body>
+    <main class="app-shell">
+      <aside class="sidebar" aria-label="题库目录">
+        <div class="brand">
+          <span class="brand-mark">A</span>
+          <div>
+            <h1>AgenticRL Quiz</h1>
+            <p id="libraryCount">Loading...</p>
+          </div>
+        </div>
+        <div class="search-box">
+          <input id="searchInput" type="search" placeholder="搜索知识点" autocomplete="off">
+        </div>
+        <nav id="topicList" class="topic-list"></nav>
+      </aside>
+
+      <section class="workspace">
+        <header class="topbar">
+          <div>
+            <p id="sourcePath" class="source-path"></p>
+            <h2 id="topicTitle">选择一个知识点</h2>
+          </div>
+          <div class="score-card">
+            <span id="scoreText">0 / 0</span>
+            <small>本节正确</small>
+          </div>
+        </header>
+
+        <section class="knowledge-panel">
+          <h3>知识点导读</h3>
+          <div id="summaryList" class="summary-list"></div>
+        </section>
+
+        <section class="quiz-panel">
+          <div class="question-head">
+            <div>
+              <span id="questionIndex" class="pill">第 1 题</span>
+              <span id="questionType" class="pill muted">单选</span>
+            </div>
+            <button id="resetButton" class="ghost-button" type="button">重做本节</button>
+          </div>
+          <p id="questionText" class="question-text"></p>
+          <div id="optionList" class="option-list"></div>
+          <div id="feedback" class="feedback" aria-live="polite"></div>
+          <div class="actions">
+            <button id="prevButton" type="button">上一题</button>
+            <button id="nextButton" type="button">下一题</button>
+          </div>
+        </section>
+      </section>
+    </main>
+
+    <script src="data/quiz-data.js"></script>
+    <script src="app.js"></script>
+  </body>
+</html>
