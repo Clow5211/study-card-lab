@@ -1,0 +1,421 @@
+# 每日复习题 · 2026-07-02（周四）
+
+> **三大主题**：强化学习（PPO/GRPO/DAPO/VERL）· Agent 工程化（Function Calling/MCP/A2A）· RAG 工程（检索/重排/权限/Agentic RAG）
+> **难度分布**：🟢 基础 ×10 · 🟡 中档 ×7 · 🔴 困难 ×3
+> **前沿 / 实战标注**：3 道前沿题（OpenClaw 架构 / NightFeats 时序权重 / NightFeats 四原则）+ 1 道实战踩坑题（VERL 多轮 tokenization delta 策略）
+
+> ⚠️ **本场说明**：`/home/gem/.aily/workspace/study-notes/` 目录当前为空，原始 10 份笔记未在该路径持久化（昨日 memory `2026-07-01.md` 中保留有完整文件清单与主题索引）。本场题目基于**昨日 memory 索引 + 今日 web_search 补充的前沿内容**生成。下一场推送前请补齐笔记文件到 study-notes/。
+
+---
+
+## 🟢 基础题（10 道）
+
+### 1.【RL·选择】REINFORCE 目标函数
+策略梯度 REINFORCE 算法的目标函数期望形式最准确的写法是？
+- A. $J(\theta) = \mathbb{E}_{\tau \sim \pi_\theta}\left[\sum_t \nabla_\theta \log \pi_\theta(a_t|s_t)\right]$
+- B. $J(\theta) = \mathbb{E}_{\tau \sim \pi_\theta}\left[\sum_t R(\tau) \cdot \nabla_\theta \log \pi_\theta(a_t|s_t)\right]$
+- C. $J(\theta) = \mathbb{E}_{\tau \sim \pi_\theta}\left[\sum_t \nabla_\theta R(\tau)\right]$
+- D. $J(\theta) = \mathbb{E}_{\tau \sim \pi_\theta}\left[\sum_t (G_t - b(s_t)) \nabla_\theta \log \pi_\theta(a_t|s_t)\right]$（带 baseline）
+
+**答案：A → 实际期望的"无偏形式"是 D**。A 缺了 $R(\tau)$ 权重，梯度信号为零，**算法无法工作**；B 缺 baseline，方差巨大；C 链式法则写错。**REINFORCE 最小工作版本**是 B（带回报权重），加入 baseline $b(s_t)$ 后变成 D，是降低方差的标准做法（VPG/PPO 都基于此）。
+
+---
+
+### 2.【RL·选择】MoE 模型的稀疏激活
+关于 MoE（Mixture-of-Experts）模型的稀疏激活特性，下列说法正确的是？
+- A. 每个 token 会激活全部 experts，因为模型要保证容量
+- B. 路由器（router）为每个 token 选择 top-k experts，仅激活其中少数
+- C. MoE 模型不需路由器，每个 expert 自动竞争
+- D. 激活的 expert 集合在不同 token 间完全相同
+
+**答案：B**。MoE 通过 router 门控对每个 token 选 top-k（k 通常为 1~8）expert 激活。**关键副作用**是"expert-activation volatility"——一次梯度更新后，相同 response 在新旧策略下激活的 expert 集合可能 ~10% 不同，这是 GRPO 在 MoE 上不稳定的根因。
+
+---
+
+### 3.【RL·判断】VERL 的 Driver/Worker 角色
+VERL 框架中，Driver 端是单进程式的 RL 训练主控循环，WorkerGroup 是分布式 GPU 计算单元，通过 Ray 把算法流程与计算实现解耦。
+
+**答案：正确**。`RayPPOTrainer` 充当 Driver Process，单进程式描述 PPO/GRPO 主循环；WorkerGroup 隐藏 Ray 远程调用的细节；Resource Pool 管理 GPU 资源。**算法流程灵活，计算实现可替换**——同一套 Driver 代码可以挂不同后端（Megatron / FSDP）。
+
+---
+
+### 4.【RL·选择】DAPO Overlong Reward Shaping
+DAPO 中 Overlong Reward Shaping 的核心思想是？
+- A. 对超长回答直接判 reward=0
+- B. 对超长回答做柔性惩罚（如线性折减），保留"接近阈值但仍可参考"的信号
+- C. 截断超长部分只评前半段
+- D. 加大对超长回答的正奖励激励长 CoT
+
+**答案：B**。DAPO 用 soft penalty（如在长度阈值之上线性折减 reward）替代硬截断，**保留"勉强过长但答案有价值"的样本的梯度信号**，避免一刀切导致的训练信号浪费。这是 DAPO 能在 long-CoT RL 中跑出比 GRPO 更长响应长度的关键工程技巧之一。
+
+---
+
+### 5.【Agent·选择】Function Calling 三要素
+完整的 Function Calling 链路必含以下哪三个核心环节？
+- A. Tool Schema + 模型结构化输出 + 运行时执行
+- B. Tool 源码 + HTTP 服务 + 浏览器渲染
+- C. 函数名 + 函数参数 + 函数返回值
+- D. LLM 内部执行 + 函数副作用 + 数据库写入
+
+**答案：A**。**Function Calling = Schema（接口契约）+ 模型结构化输出（按 Schema 表达的 JSON）+ runtime 执行（解析+调用+结果回填）**。模型只"表达动作意图"，**绝不直接触达外部系统**——"LLM 是控制面不是数据面"是核心认知。C 是函数式编程的视角，丢失了 LLM 在中间的关键作用。
+
+---
+
+### 6.【Agent·选择】MCP Resources vs Tools
+MCP 协议中 Resources 与 Tools 的本质区别是？
+- A. Resources 可写，Tools 只读
+- B. Resources 是只读上下文（文件/文档/数据库快照），Tools 是可执行动作
+- C. Resources 是模型驱动，Tools 是用户驱动
+- D. Resources 仅供 prompt 使用，Tools 供系统调用
+
+**答案：B**。Resources 是**只读、被取用**的上下文，Tools 是**被调用、产副作用**的动作；Prompts 是可参数化任务模板。**这种三分类是 MCP 与普通 tool-only 协议的核心区别**——它把"读信息"和"做动作"在协议层就分开了，能更细粒度地控制权限（如对 Resources 给"读"权限，对 Tools 给"调用"权限）。
+
+---
+
+### 7.【Agent·选择】Agent Runtime 五层架构
+Agent Runtime 的标准五层分层从上到下最准确的是？
+- A. 模型层 / 工具层 / 记忆层 / 编排层 / 协议层
+- B. 编排层 / 记忆层 / 工具层 / 模型层 / 协议层
+- C. 协议层 / 编排层 / 工具层 / 记忆层 / 模型层
+- D. 工具层 / 编排层 / 模型层 / 记忆层 / 协议层
+
+**答案：A**（常见版本：协议层 → 编排层 → 工具层 → 记忆层 → 模型层 的反向，但业界典型分层为**模型层（LLM Provider）→ 工具层 → 记忆层 → 编排层 → 协议层**自下而上）。自下而上：**模型层**负责推理；**工具层**封装副作用能力；**记忆层**负责短期/长期/共享记忆；**编排层**负责循环、规划、错误恢复；**协议层**负责 A2A/MCP 等对外接口。**理解"层与层之间的数据流"是设计 Agent 系统的基础**。
+
+---
+
+### 8.【RAG·选择】GraphRAG 与向量 RAG 的核心区别
+GraphRAG 与传统向量 RAG 最本质的区别在于？
+- A. GraphRAG 不需要 embedding
+- B. GraphRAG 用图结构（实体-关系）建模知识，能支持多跳/全局/跨文档推理；向量 RAG 只能做局部相似度匹配
+- C. GraphRAG 只支持英文
+- D. GraphRAG 比向量 RAG 速度慢但更准（纯粹效率 vs 效果对比）
+
+**答案：B**。**本质差异**是表示结构：向量 RAG 把文档切成 chunk + embedding，本质是"局部相似度匹配"，跨 chunk 推理需要额外的链路拼接；**GraphRAG 把知识显式建模为实体-关系图，能直接做多跳遍历、子图聚合、全局摘要**。D 是结果描述，B 是根因。A、C 错误。
+
+---
+
+### 9.【RAG·选择】时序权重公式
+在 NightFeats 系统的时序-语义重排公式 $\tilde{s}_i = (1-w) \cdot s_i + w \cdot \frac{1}{1 + d_i/365}$ 中，$d_i$ 表示什么？$w$ 越大意味着什么？
+
+- A. $d_i$ 是文档字符数；$w$ 越大语义权重越大
+- B. $d_i$ 是文档年龄（天）；$w$ 越大越偏好新文档
+- C. $d_i$ 是文档 ID 编号；$w$ 越大越偏好长文档
+- D. $d_i$ 是 query 与 doc 的距离；$w$ 越大越偏 Dense
+
+**答案：B**。$d_i$ 是文档年龄（天），$1/(1 + d_i/365)$ 是**新鲜度衰减因子**（1 年前衰减到 0.5）。$w$ 控制"语义"与"新鲜度"的相对权重——**$w$ 越大，rerank 越倾向选新文档**。NightFeats 默认 $w=0.3$，把语义相似度放在首位、新鲜度作为次级调节。
+
+---
+
+### 10.【RAG·判断】HyDE 原理
+HyDE（Hypothetical Document Embeddings）的核心做法是：让 LLM 先生成"假设性答案文档"，再对该假设文档做 embedding 去检索真实文档。
+
+**答案：正确**。HyDE 用 LLM 生成的"假设答案"代替原始 query 做检索，**解决 query 与 doc 的语义鸿沟**（query 短、doc 长，原始 query 容易在向量空间里找不到最相关的 doc）。代价是：① 假设答案可能错（幻觉污染）；② 额外一次 LLM 调用 → 成本上升。**适用条件：query 短、检索精度优先、对延迟和成本不敏感**。
+
+---
+
+## 🟡 中档题（7 道）
+
+### 11.【RL·对比】REINFORCE++ vs PPO
+
+> 题目：REINFORCE++ 是 PPO 框架下"去掉 critic"的变体。请从显存占用、训练稳定性、实现复杂度、适用任务四个维度对比 REINFORCE++ 和标准 PPO。
+
+**参考答案**：
+
+| 维度 | PPO | REINFORCE++ |
+|---|---|---|
+| **显存** | 需额外 value head（参数量 ≈ 主模型 1/3~1/2） | 无 value head，**显存节省 ~20~30%** |
+| **训练稳定性** | GAE + clip 提供 token 级细粒度 advantage；稳定 | 用"组内归一化 + 全局 KL 惩罚"代替 value baseline；组内 reward 离散时方差较大 |
+| **实现复杂度** | 需训练 value head + GAE 计算 | 仅保留 PPO 的 clip + KL + group baseline，**实现简单** |
+| **适用任务** | 长链细粒度 credit assignment（Agent 多步决策） | RLVR 类可验证任务（数学/代码），reward 是 0/1 标量 |
+
+**关键差异一句话**：REINFORCE++ 是"PPO 框架 + GRPO 的 baseline 设计"——保留 PPO 的 clip/KL/工程成熟度，省掉 critic。
+
+---
+
+### 12.【RL·前沿】GiGPO 双层优势估计【前沿】
+
+> 题目：verl-agent（NeurIPS 2025）提出的 GiGPO（Group-in-Group Policy Optimization）相对 GRPO 的核心改进是什么？为什么多轮 Agent 训练中需要"组内组"的双层结构？
+
+**参考答案**：
+
+**核心改进：双层分组 + 双层优势估计**。
+- **轨迹级分组（Trajectory-level Grouping）**：同一 prompt 采样 N 条完整轨迹，按"任务完成度"分组 → 计算轨迹级 advantage
+- **步骤级分组（Step-level Grouping）**：对相似中间状态（anchor state）的决策做聚类 → 在"同 anchor 的多轨迹同步骤"组内计算步骤级 advantage
+- 优化目标：$J_{GiGPO} = J_{traj} + \lambda \cdot J_{step}$
+
+**为什么 Agent 训练需要"组内组"**：
+- 多轮 Agent 的**长链稀疏奖励**问题——一次成功任务可能 30+ 步，只在末端给 0/1 奖励，传统方法把同一 advantage 平摊到每步，"该学的步骤没学到位，不该学的步骤被平均化"。
+- 步骤级分组让"处于同一 anchor state、做了不同动作、得到不同后续回报"的多条轨迹构成对比样本，**实现 token-step 级的细粒度 credit assignment**。
+- 实验数据：在 WebShop 任务上，GiGPO 比 RAGEN / Search-R1 提升 **37%**；在"先搜索再筛选"等多步指令上准确率提升 **42%**。
+
+**实现位置**：`gigpo/core_gigpo.py` 实现优势聚合；`agent_system/memory/` 提供 `SearchMemory` 模块做 anchor state 提取。
+
+---
+
+### 13.【RL·简答】GTPO / DGPO 的 Credit Assignment 演进
+
+> 题目：RLHF → GRPO → DAPO → GTPO → DGPO 的演进中，credit assignment（奖励分配到具体 token）的能力是如何逐步增强的？
+
+**参考答案**：
+
+| 算法 | advantage 来源 | 粒度 | 关键 trick |
+|---|---|---|---|
+| **RLHF (PPO)** | GAE + critic | token 级 | 需 value head |
+| **GRPO** | 组内 reward 标准化 | response 级 | 无 critic，但所有 token 共享 advantage |
+| **DAPO** | 组内 + token-level loss | token 级（loss 层） | 解耦 clip + token-level PG loss |
+| **GTPO** | reward 按 token 段分配 | token 段 | 把 reward 按规则映射到不同 token 段 |
+| **DGPO** | 去偏的 token-level | token 级 | 修正 GRPO 长度偏差 |
+
+**演进轴**：
+1. **RLHF → GRPO**：砍掉 critic，省显存；但 token 粒度损失
+2. **GRPO → DAPO**：loss 层做 token 粒度，不恢复 critic 也能 token-level 更新
+3. **DAPO → GTPO**：把"如何把 response-level reward 拆给各 token"做成可学习的段分配
+4. **GTPO → DGPO**：发现 GTPO 在长短回答上有 bias，加入去偏项
+
+**核心矛盾**：**显存效率（无 critic） vs credit assignment 粒度（token 级）**。DAPO 之后的演进都是在这个矛盾里找平衡。
+
+---
+
+### 14.【Agent·前沿】OpenClaw 框架的 Gateway 设计【前沿】
+
+> 题目：OpenClaw 框架把 LLM 接入到本地执行环境的"四大模块"是什么？Gateway 在这套架构中扮演什么角色？为什么说 OpenClaw 是"loop-driven 而非 event-only"？
+
+**参考答案**：
+
+**四大模块**：
+1. **Gateway（控制面）**：HTTP/WebSocket 服务器，认证所有入站连接、消息路由、会话管理、节点注册表、命令队列；**唯一职责是"桥"**
+2. **Agent Runtime（智能体运行时）**：封装 LLM 推理循环、工具分发、Docker 沙箱管理；入口 `runEmbeddedPiAgent` 解析 auth profile → 选模型 → 提交 turn
+3. **Skills & Plugins（技能与插件）**：从 clawhub.ai 注册中心加载 SKILL.md 指令文件扩展能力；**技能是"操作员级信任"**（加载后即作为可信指令源）
+4. **Memory & Knowledge（记忆与知识）**：会话历史、长期上下文、启动时加载的 bootstrap 文件；SQLite 是唯一数据库，支持 `sqlite-vec` 向量加速
+
+**Gateway 的核心角色**：
+- 接收 15+ 外部渠道（Telegram/Slack/WhatsApp/iMessage...）的入站消息 → 规范化 → 路由到 Agentic Loop
+- 把 Agent 输出沿同一渠道回传
+- **过滤 `HEARTBEAT_OK` token**——"无任务可做"的心跳结果静默丢弃，不打扰用户
+- 鉴权、消息队列、限流三件套
+
+**Loop-driven 而非 event-only**：
+- **传统 event-only 架构**：消息到达 → 触发回调 → 结束；agent 是"被动响应者"
+- **OpenClaw 的 loop-driven 架构**：agent 在 loop 中**周期性醒来**（heartbeat 触发）→ 读 HEARTBEAT.md → 评估上下文 → 决定是否行动 → 处理 HEARTBEAT_OK；loop 状态连续，即使没有外部消息也能主动做事（检查邮件、汇总日报、监控 CI）
+
+---
+
+### 15.【Agent·简答】Tool / Skill / MCP 三个概念的层级关系
+
+> 题目：在 Agent 工程化中，Tool、Skill、MCP 经常被混用。请从"解决问题"角度说明三者的本质层级关系，并解释为什么 Skill 系统需要"渐进式加载"（Progressive Disclosure）。
+
+**参考答案**：
+
+| 概念 | 抽象层级 | 回答的问题 | 典型形态 |
+|---|---|---|---|
+| **Tool** | 原子动作 | "能做什么" | 一次函数调用：search/call_API/send_email |
+| **MCP** | 协议 | "能力如何被接入" | 定义 Agent ↔ Tool/Resource/Prompt 的标准接口 |
+| **Skill** | 能力资产 | "该怎么做" | SKILL.md + Prompt 模板 + 脚本 + 评测标准 |
+
+**为什么需要 Skill**：
+- 很多任务不是"有工具就能做好"——例如"写论文格式检查报告"，需要知道检查哪些维度、严重性如何分级、输出什么修改建议、哪些内容不能改。**Skill 把方法论资产化**，支持版本、回滚、离线评测、线上监控。
+
+**渐进式加载（Progressive Disclosure）**：
+- Skill 数量多了以后，**全部塞入上下文会：① Token 成本上升 ② KV 缓存命中率下降 ③ 模型选择能力变差（决策疲劳）**
+- 正确做法是分两层：
+  - **元数据层**（常驻）：Skill 名称、简介、适用场景——模型用这个判断"该不该用"
+  - **完整内容层**（按需加载）：判断相关后再 load SKILL.md 全文
+- 典型实现：OpenClaw 的 `clawhub.ai` 注册中心先把元数据缓存在 `AGENTS.md` 或系统 prompt，按需 fetch 完整指令。
+
+**MCP 和 Skill 关系**：MCP 是协议（解决"接入"），Skill 是资产（解决"用法"）。**Skill 可建立在 MCP 工具 + Prompt 模板 + 本地脚本之上**。
+
+---
+
+### 16.【RAG·前沿】NightFeats 时序权重 w 参数调节【前沿】
+
+> 题目：NightFeats 的时序-语义重排公式 $\tilde{s}_i = (1-w) \cdot s_i + w \cdot \frac{1}{1 + d_i/365}$ 中，$w$ 的取值对系统行为有什么影响？什么场景应该调大或调小 $w$？为什么这种"显式可调"比"隐式学习"更适合生产系统？
+
+**参考答案**：
+
+**$w$ 取值对行为的影响**：
+- $w = 0$ → 退化为纯语义 reranker，**完全忽略时间**（适合知识稳定领域：法律/历史/技术文档）
+- $w = 0.3$（NightFeats 默认）→ 语义占 70%、新鲜度占 30%，**"高相似但陈旧"和"中相似但新鲜"得分接近**
+- $w \to 1$ → 退化为纯时间排序，**只看文档年龄**（极端新闻场景）
+
+**调参场景决策**：
+| 业务 | 推荐 $w$ | 理由 |
+|---|---|---|
+| 金融/医疗咨询 | 0.4~0.5 | 时效性强，过时文档有误导风险 |
+| 通用搜索/电商 | 0.2~0.3 | 兼顾"经典款"和"新品" |
+| 法律/学术/技术手册 | 0.0~0.1 | 知识稳定，经典条文价值高 |
+| 新闻/事件追踪 | 0.5~0.7 | 时效性压倒一切 |
+
+**为什么"显式可调"比"隐式学习"更适合生产**：
+- **可解释性**：出问题时能直接定位"是 $w$ 调高了导致过期内容被重排"——一查配置就明白
+- **A/B 实验友好**：调 $w$ 不需要重训模型，改一行配置即可上线对照
+- **业务方沟通**：产品和法务能直接理解"时间权重"这个旋钮，不用解释黑盒
+- **异常兜底**：LLM-as-a-Judge 失败时，时间权重仍能保证一个"安全兜底"的排序逻辑
+
+**关键洞察**：**时序权重本质上是把"业务对时间敏感性的偏好"显式编码进 retrieval**，比让 LLM "自己学会"新鲜度更可控。
+
+---
+
+### 17.【RAG·简答】Agentic RAG 失败排障
+
+> 题目：某企业 Agentic RAG 系统上线后，效果比 Vanilla RAG 还差。常见的失败原因有哪些？应该按什么顺序排查？
+
+**参考答案**：
+
+**常见失败原因（按发生频率）**：
+
+1. **基础 RAG 本身就不稳**：解析/切块/召回/排序/权限/忠实生成任一环节有缺陷，叠加 Agent 能力反而放大问题（"garbage in, garbage out, times N turns"）
+2. **工具调用不稳定**：tool 本身有超时/限流/错误返回，Agent 循环里被级联放大
+3. **规划能力不足**：Agent 把"先查 A 再查 B"拆成"查完 A 直接给答案"，跳过关键中间检索
+4. **缺少 trace/回放**：答错后无法定位是路由错、分解错、工具选错还是生成错
+5. **延迟爆炸**：每轮 LLM 调用 + 检索 + 反思，p99 延迟可能到 30s+；用户体感"卡死"
+6. **幻觉被多轮放大**：第一轮的轻微幻觉进入第二轮的 context，被当成"事实"进一步推理
+
+**按顺序排查**：
+1. **先验基础 RAG 指标**（Recall@K、Faithfulness、Answer Relevancy）——如果 Vanilla RAG 都不及格，Agentic RAG 不会更好
+2. **trace 全链路**：从 query → plan → tool call → tool result → reflection → final answer，每步记录；用 trace 工具（如 Langfuse / Phoenix）
+3. **分阶段评测**：拆解"规划准确率"、"工具选择准确率"、"单步工具成功率"、"最终答案忠实度"，定位瓶颈
+4. **A/B 对照**：同一组 query，分别跑 Vanilla RAG 和 Agentic RAG，看哪些 query 真的需要 Agentic 能力
+5. **降级策略**：当 Agent 规划失败 / 工具超时，直接回退到 Vanilla RAG 结果
+
+**核心心法**：**企业级 Agentic RAG 上线前必须先稳定基础 RAG，再叠加 Agent**。先做 Vanilla RAG → Hybrid RAG → GraphRAG → Agentic RAG 的渐进式升级。
+
+---
+
+## 🔴 困难题（3 道）
+
+### 18.【RL·实战】VERL 多轮 tokenization 的 delta 策略【实战】
+
+> 题目：你在用 VERL 训练一个多轮工具调用 Agent，发现以下两个问题：
+>
+> ① 训练 loss 偶尔出现无规律尖刺；
+> ② 偶尔报 `shape mismatch` 或 token 对不齐的 warning。
+>
+> 检查 rollout 代码发现：每轮模型生成 `<tool_call>...</tool_call>` 后解析为 JSON，工具执行后把 `{"role": "tool", "content": "..."}` append 到 messages，下一轮用 `apply_chat_template(messages)` 重新渲染整段对话再 tokenize。VERL 官方推荐的多轮 tokenization 策略（delta 策略）是什么？请解释它如何修复上述问题。
+
+**参考答案**：
+
+**问题根因（与昨日 TITO 同一类，但更具体的解法）**：
+- `apply_chat_template(messages)` + tokenize 整段对话是"full-tokenization"——**只对纯 SFT 友好，不适合 RL**
+- 多轮 RL 中，**模型上一轮实际采样的 token id 序列**在重新渲染后经常被悄悄替换为另一组 token（因 BPE 的 `encode → decode → encode` 不是可逆操作）
+- 直接后果：① `old_logprob` 和 `new_logprob` 计算的 token 位置不对齐 → advantage/clip 失效；② loss mask 错位 → 关键 token 不被更新；③ reward span 错位
+
+**VERL 的 delta-based tokenization 策略**：
+
+```python
+# 每轮新增 assistant 消息时：
+prev = tokenizer.apply_chat_template(messages[:i], add_generation_prompt=True, tokenize=False)
+curr = tokenizer.apply_chat_template(messages[:i+1], add_generation_prompt=False, tokenize=False)
+# 取两次渲染结果的"差"作为本轮新增的 token
+delta_ids = tokenizer.encode(curr[len(prev):], add_special_tokens=False)
+token_ids += delta_ids
+loss_mask += [1] * len(delta_ids)  # 只有新 assistant token 进 loss
+```
+
+**为什么 delta 能修复**：
+- 关键是 `curr[len(prev):]`——直接**复用第一次渲染的字符串作为参考点**，对 delta 段独立 tokenize
+- 这避免了"对模型已生成的整段对话重新 encode"的非可逆问题
+- `add_generation_prompt=True/False` 的配合确保 assistant prompt 段被正确划到 loss 之外
+
+**VERL 内置的 sanity check**：
+- 默认开启 `tokenization_sanity_check_mode="strict"`：在每次 rollout 结束后，**把 delta 拼接结果与 full-tokenization 结果做严格比对**
+- 不一致会打印 warning：`Inconsistent training and inference tokenization detected`，并指出不匹配的子串
+- 模式选项：
+  - `strict`（默认）：完全一致才算通过
+  - `ignore_strippable`：忽略空白差异（`\n`、`\t`、空格），适合 chat template 里有正常空白变动的场景
+  - `disable`：彻底关掉，**慎用**——只在完全验证过模板不会引入实质差异时才能关
+
+**修复验证清单**：
+1. `apply_chat_template` 对包含 tool 消息的对话必须满足**前缀保留性**——追加 tool 消息不会改变前面 token 的 id
+2. 在每个 turn 边界打印 `len(buffer) == sum(turn_token_lens)`，不一致就有 token 漂移
+3. 开启 strict sanity check 跑几轮 rollout，看 warning 是否消失
+
+**关键心法**：**delta 策略是 TITO 原则在工程上的标准实现**——既保证"assistant 实际采样的 token 不被重新编码"，又保证 loss mask 与 token 严格对齐。
+
+---
+
+### 19.【Agent·前沿】OpenClaw 的 HEARTBEAT 机制与安全治理【前沿】
+
+> 题目：OpenClaw 框架的 HEARTBEAT 机制允许 Agent 在没有外部消息时"主动醒来"做事。设计这种 loop-driven 心跳时需要考虑哪些问题？特别是，如何防止"Agent 主动做错事"（如误删文件、误发邮件）？
+
+**参考答案**：
+
+**HEARTBEAT 机制设计要点**：
+- **触发**：固定间隔（如每 30 分钟）+ 可配置 cron
+- **检查清单**：`HEARTBEAT.md` 是一份 Markdown 任务清单，agent 每轮读它
+- **决策逻辑**：评估每条 checklist 项 → 有事做事，没事回 `HEARTBEAT_OK` → Gateway 识别并静默丢弃
+- **上下文组装**：`SOUL.md`（身份/价值观）+ `HEARTBEAT.md`（检查清单）+ SQLite 记忆检索 + 当前 trigger → LLM
+
+**主动做错事的风险面**：
+- HEARTBEAT 触发 → agent 决定"该总结今天活动" → 调 email tool → **发错对象 / 包含敏感信息**
+- HEARTBEAT 触发 → agent 决定"清理临时文件" → 误删生产数据
+- HEARTBEAT 触发 → agent 决定"提交代码修复" → 误推 main 分支
+
+**安全治理设计（五层）**：
+
+| 层级 | 设计 |
+|---|---|
+| **1. 能力最小化** | Skill 加载时声明权限范围，HEARTBEAT 用的 skill 集合**只读为主**，写操作走审批 |
+| **2. 工具白名单** | shell tool 走 lexical allowlist 评估 + approval state 双重检查 |
+| **3. 沙箱隔离** | 工具执行默认进 Docker 沙箱；高危命令（rm、git push、curl POST）必须 escalate 到 host shell + 人工审批 |
+| **4. 人工审批网关** | `ExecApprovalManager` 序列化待审批命令，关键操作（写邮件 / 推代码 / 删数据）必须人工确认 |
+| **5. 审计回放** | 所有 tool call 写 SQLite；出问题时可回放 HEARTBEAT 决策链路 |
+
+**Loop-driven 架构特有的安全挑战**：
+- 传统 event-only 架构："用户没说话 → agent 不做事"——天然安全
+- OpenClaw 的 loop-driven：**agent 主动做事 → 必须假设 HEARTBEAT 触发的是"自驱行为"**——风险从"被动执行用户意图"变成"主动犯错"
+- **缓解措施**：① HEARTBEAT 任务清单由人维护，agent 只能"按清单执行"不能"自由发挥" ② 高危操作必须有"用户最后确认"环节 ③ 写操作前必须打印"我将要做 X 到 Y，是否继续"，等 Gateway 二次确认
+
+**关键心法**：**loop-driven 是双刃剑**——给 agent 主动性的同时，必须配套"主动性的边界"。HEARTBEAT_OK 的静默丢弃是一个巧妙的"负反馈"机制——让系统默认"什么都不做"是安全状态。
+
+---
+
+### 20.【RAG·前沿】NightFeats 的 P1-P4 架构原则【前沿】
+
+> 题目：NightFeats（NeurIPS 2025 Best Dynamic Evaluation）系统提出 P1-P4 四条架构原则。请逐一解释，并说明这四条原则如何对应到工程实现（数据流、模型行为、评测指标）。
+
+**参考答案**：
+
+**P1：结构化中间表示（Structured Intermediate Representations）**
+- **原则**：每个 agent 阶段（Research → Generator → Writer）输出**带元数据的标准化数据模型**——证据段带 provenance、事实断言带矛盾标注、最终段落带规范化引用
+- **工程实现**：用 OpenAI Agents SDK + Pydantic-style schema 强制每个 stage 输出 `ranked_evidence → cited_facts → final_prose` 的结构化契约
+- **价值**：**推理链可审计**——任一阶段出错都能定位到具体 schema 字段
+
+**P2：时序-语义融合（Temporal-Semantic Fusion）**
+- **原则**：把"语义相似度"和"新鲜度"显式编码为可调超参数 $w$，公式 $\tilde{s}_i = (1-w) s_i + w \cdot 1/(1+d_i/365)$
+- **工程实现**：reranker 阶段用 Voyage AI，融合分数直接进排序 pipeline
+- **价值**：**业务对时间敏感性的偏好可显式调控**，不用重训模型
+
+**P3：有界矛盾调和（Bounded Contradiction Reconciliation）**
+- **原则**：矛盾检测后触发**最多 2 轮 targeted sub-retrieval**，按严重性分级（minor 走 fact weighting；important / critical 触发 sub-agent 再检索）
+- **工程实现**：`Fact` + `Reconciliation` sub-agents 接收高严重性矛盾 → 拉新证据 → 收敛
+- **价值**：**避免无约束迭代的递归漂移和延迟爆炸**——预测计算成本上限
+
+**P4：引用一等公民（Citation as a First-Class Output）**
+- **原则**：引用是**结构不变量**而非生成结果——Generator 抽取 fact 时强制带 source，Writer 必须**保留并规范化**所有引用，自动生成 reference list
+- **工程实现**：WriterAgent 的 prompt 模板约束"每个句子必须挂 `[n]`"，post-processor 校验 `[n]` 与 reference list 严格对应
+- **价值**：**可追溯性是系统不变量，不是"模型最好能做到"**——从根本上消除幻觉引用
+
+**评测指标映射**：
+
+| 原则 | 评测指标 |
+|---|---|
+| P1 | 中间表示 schema 校验通过率、agent stage 间 handoff 成功率 |
+| P2 | 时效敏感 query 上的 NDCG@10 提升 |
+| P3 | 矛盾解决率 vs 迭代轮数、p99 延迟 |
+| P4 | 引用准确率（每个 `[n]` 是否真存在于 reference list）、人工 Likert 引用可信度 |
+
+**关键心法**：**P1-P4 共同把"系统级保证"从模型行为转移到架构约束上**——不再依赖"模型最好做到"，而是"做不到就不通过 pipeline"。这是 Agentic RAG 走向生产的关键设计哲学。
+
+---
+
+## 📚 今日新知
+
+今天搜索到 4 个值得记住的前沿知识点（与昨日 GSPO/TITO/REINFORCE++/Dr.GRPO/Interact-RAG 互补）：
+
+- **OpenClaw 框架（2026-01 重启）**：**Gateway / Agent / Skill / Memory** 四模块的 loop-driven Agent 架构。核心创新是**HEARTBEAT 机制**——agent 在无外部消息时也能周期性"主动醒来"做检查清单任务，HEARTBEAT_OK token 被 Gateway 静默丢弃避免打扰用户。安全上必须配套"能力最小化 + 沙箱 + 人工审批网关 + 审计回放"五层治理，否则 loop-driven 就是"主动做错事"。
+
+- **verl-agent 与 GiGPO（NeurIPS 2025）**：用**双层分组（轨迹级 + 步骤级）优势估计**解决多轮 Agent 训练的稀疏奖励与 credit assignment 问题。WebShop 任务比 RAGEN/Search-R1 提升 37%，多步指令准确率提升 42%。代表"RL 在 Agent 训练上的最新工程化进展"。
+
+- **VERL 多轮 tokenization 的 delta 策略**：每轮新增 assistant 消息时，**对带 tool 与不带 tool 的 messages 各 render 一次，取字符串差再 tokenize**——避免"对模型已生成的整段对话重新 encode"的非可逆问题。配合 `tokenization_sanity_check_mode="strict"` 自动检测模板漂移。**TITO 原则在工程上的标准实现**。
+
+- **NightFeats（NeurIPS 2025 Best Dynamic Evaluation）**：**P1 结构化中间表示 / P2 时序-语义融合 / P3 有界矛盾调和 / P4 引用一等公民**四条架构原则。把"系统级保证"从模型行为转移到架构约束上——"做不到就不通过 pipeline"，是从 demo 走向生产 Agentic RAG 的关键设计哲学。其时序权重公式 $w=0.3$ 配合 `1/(1+d_i/365)` 衰减因子，是"新鲜度可调"的实用化范例。
